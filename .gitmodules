@@ -1,0 +1,3 @@
+[submodule "tmux/tmux-weather"]
+	path = tmux/tmux-weather
+	url = https://github.com/aaronpowell/tmux-weather
