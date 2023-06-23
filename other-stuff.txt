@@ -1,0 +1,15 @@
+All:
+  - Bash
+  - Vim
+  - Emacs
+  - Tmux
+  - Neovim (Optional)
+
+MacOS:
+  - Brew
+  - Linux GNU Tools (e.g. ls, grep)
+  - VimR (Optional)
+
+Linux:
+  - Neovim-qt (Optional)
+
