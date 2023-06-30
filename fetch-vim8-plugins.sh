@@ -106,3 +106,7 @@ check_for_repo_and_clone $VIM_PLUGINS_PATH \
                          https://github.com/bfrg/vim-cpp-modern.git \
                          "Vim Cpp Modern"
 
+check_for_repo_and_clone $VIM_PLUGINS_PATH \
+                         https://tpope.io/vim/fugitive.git \
+                         "Fugitive"
+
