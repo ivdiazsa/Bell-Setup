@@ -1,8 +1,10 @@
 Important Ideas to Implement:
   - Install Powerline fonts before anything Vim and Tmux related at least.
+  - Add conditions for Vim plugin shortcuts. This, to keep vimrc clean and
+    not have void commands because of missing plugins.
+
+Not Urgent Ideas to Implement:
   - Install and configure the necessary libs for Clang Complete and Omnisharp.
-      (This one might be more complicated than it sounds, so we won't treat it
-       as urgent.)
 
 All:
   - Bash

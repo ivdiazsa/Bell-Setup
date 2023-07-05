@@ -88,13 +88,23 @@ set laststatus=2
 :map <S-K> <C-W>+
 :map <S-L> <C-W>>
 
+" Commands I use often
 :map <M-z> :set wrap! <Enter>
 :map <M-S-z> :pclose <Enter>
 :noremap <Leader><F7> :set relativenumber! <Enter>
+:map <M-g> :vertical Git <Enter>
+
+" LVim Commands
 :map <M-n> :lnext <Enter>
 :map <M-p> :lprevious <Enter>
 :map <M-o> :lopen <Enter>
 :map <M-c> :lclose <Enter>
+
+" Quick Fix Commands
+:map <M-N> :cnext <Enter>
+:map <M-P> :cprevious <Enter>
+:map <M-O> :copen <Enter>
+:map <M-C> :cclose <Enter>
 
 " Configure netrw to be as good as (or even better than) the NERDtree plugin
 :map <F4> :Vexplore <Enter>
