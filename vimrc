@@ -91,6 +91,10 @@ set laststatus=2
 :map <M-z> :set wrap! <Enter>
 :map <M-S-z> :pclose <Enter>
 :noremap <Leader><F7> :set relativenumber! <Enter>
+:map <M-n> :lnext <Enter>
+:map <M-p> :lprevious <Enter>
+:map <M-o> :lopen <Enter>
+:map <M-c> :lclose <Enter>
 
 " Configure netrw to be as good as (or even better than) the NERDtree plugin
 :map <F4> :Vexplore <Enter>
@@ -100,7 +104,7 @@ let g:netrw_winsize=15
 let g:netrw_preview=1
 
 " Open/Close Tagbar easily
-:map <F8> :TagbarToggle<CR>
+:map <F8> :TagbarToggle <Enter>
 
 " Neovim doesn't like this either for some reason
 if !has('nvim')
