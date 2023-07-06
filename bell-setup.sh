@@ -63,3 +63,8 @@ while [ $# -gt 0 ]; do
     esac
 done
 
+# Copy bashrc to the Home folder.
+if [ $bashrc -eq 1 ]; then
+    cp bashrc $HOME/.bashrc
+fi
+
