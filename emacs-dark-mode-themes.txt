@@ -1,0 +1,108 @@
+My Emacs Dark Mode Themes:
+
+- afternoon
+- alect-black
+- alect-black-alt
+- ample
+- ample-flat
+- apropospriate-dark
+- badwolf
+- bharadwaj-slate
+- billw
+- blue-gnus* (This one seems to only work with some specific other themes)
+- blue-mood
+- blue-sea
+- calm-forest
+- charcoal-black
+- clarity (This one has a pretty neat Status Bar)
+- classic
+- clues*
+- cobalt (This one's a classic)
+- comidia*
+- cyberpunk
+- dark-blue2
+- dark-font-lock (This one requires a gray-compatible background)
+- dark-gnus* (This one seems to only work with some specific other themes)
+- dark-green* (This one seems Status Bar only)
+- dark-laptop*
+- deep-blue
+- deeper-blue
+- desert
+- dracula
+- euphoria
+- flatui-dark
+- gnome
+- gnome2
+- goldenrod
+- gray30
+- gruber-darker
+- gruvbox
+- gruvbox-dark-hard
+- gruvbox-dark-medium
+- gruvbox-dark-soft
+- hober
+- jonadabian
+- jonadabian-slate
+- jsc-dark
+- julie
+- kaolin-aurora (This one has a pretty neat Status Bar)
+- kaolin-blossom
+- kaolin-bubblegum
+- kaolin-dark
+- kaolin-eclipse
+- kaolin-galaxy
+- kaolin-mono-dark
+- kaolin-ocean
+- kaolin-shiva
+- kaolin-temple
+- kaolin-valley-dark
+- kingsajz
+- late-night
+- lawrence
+- ld-dark
+- lethe
+- manoj-dark
+- material
+- matrix
+- midnight
+- misterioso
+- modus-vivendi
+- moe-dark (This one lights up the Line Number)
+- oswald
+- parus
+- pok-wob
+- pok-wog
+- railscast
+- raspopovic
+- renegade
+- resolve
+- retro-green
+- retro-orange
+- robin-hood (This one seems like just a background)
+- ryerson
+- salmon-font-lock (This one seems like just font colors)
+- sanityinc-solarized-dark
+- sanityinc-tomorrow-blue
+- sanityinc-tomorrow-bright
+- sanityinc-tomorrow-eighties
+- sanityinc-tomorrow-night
+- seti
+- shaman
+- simple-1*
+- sitaramv-solaris
+- soothe
+- spacemacs-dark
+- subatomic
+- subdued
+- subtle-hacker
+- taming-mr-arneson
+- tango-dark
+- tangotango
+- taylor*
+- tsdh-dark
+- tty-dark
+- twilight-anti-bright
+- wheatgrass
+- wombat
+- word-perfect
+- zenburn

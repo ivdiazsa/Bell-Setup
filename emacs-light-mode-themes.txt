@@ -1,0 +1,64 @@
+My Emacs Light Mode Themes:
+
+- aalto-dark
+- aalto-light
+- adwaita
+- aliceblue
+- ample-light
+- andreas
+- apropospriate-light
+- bharadwaj
+- black-on-gray
+- blippblopp
+- dark-blue
+- dichromacy
+- digital-ofs1
+- emacs-21
+- emacs-nw
+- feng-shui
+- fischmeister
+- gray1
+- greiner
+- gruvbox-light-hard
+- gruvbox-light-medium
+- gruvbox-light-soft
+- gtk-ide
+- high-contrast (This one might also be dark with the right theme combinations)
+- infodoc
+- jb-simple
+- jedit-grey
+- jsc-light
+- jsc-light2
+- kaolin-breeze
+- kaolin-light
+- kaolin-mono-light
+- kaolin-valley-light
+- katester
+- leuven (This one has a pretty neat Status Bar)
+- light-blue
+- marine
+- marquardt
+- mistyday
+- modus-operandi
+- moe-light (This one lights up the Line Number)
+- montz
+- pierson
+- ramangalahy
+- rotor
+- sanityinc-solarized-light
+- sanityinc-tomorrow-day
+- scintilla
+- sitaramv-nt
+- snow
+- snowish
+- spacemacs-light
+- standard
+- subtle-blue
+- tango
+- tsdh-light
+- vim-colors
+- whateveryouwant
+- wheat
+- whiteboard
+- xemacs
+- xp
