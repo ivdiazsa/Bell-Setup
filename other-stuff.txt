@@ -1,17 +1,23 @@
-Important Ideas to Implement:
-  - Install Powerline fonts before anything Vim and Tmux related at least.
+Urgent Ideas to Implement:
+  - Install Powerline Fonts before anything related to the editors or Tmux.
+  - Redo all Vim stuff because at this point, it is a real mess.
+  - Even if the setup ends up entirely manually, add Forge for Emacs Magit.
+    It is super useful for working with any Git repository for real.
+  - Install Diff Colors for Git.
+
+Not Urgent Ideas to Implement:
+  - Install and configure the necessary libs for Clang Complete and Omnisharp (Vim Only).
+
+Vim Important Ideas to Implement:
   - Add conditions for Vim plugin shortcuts. This, to keep vimrc clean and
     not have void commands because of missing plugins.
 
-Not Urgent Ideas to Implement:
-  - Install and configure the necessary libs for Clang Complete and Omnisharp.
-
 All:
   - Bash
-  - Vim
+  - Vim (On Hold)
   - Emacs
   - Tmux
-  - Neovim (Optional)
+  - Neovim (Optional & On Hold)
 
 MacOS:
   - Brew
@@ -20,4 +26,7 @@ MacOS:
 
 Linux:
   - Neovim-qt (Optional)
+
+Emacs:
+  - Write doc and/or implement Forge installation script.
 
