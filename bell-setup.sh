@@ -4,67 +4,35 @@
 # it's running on, and the user provided options, it will prepare the development
 # environment accordingly.
 
-bashrc=0
-emacs=0
-neovim=0
-tmux=0
-vim=0
-vimplugins=0
+# First things first: Copy the bashrc file to get our nice and comfortable prompt.
+# TODO: Write the MacOS version of bashrc and copy the one according to the
+# platform running the script.
 
-echo ''
+echo "Copying bashrc to $HOME/.bashrc..."
+cp -f bashrc $HOME/.bashrc
 
-while [ $# -gt 0 ]; do
-    case $1 in
-        --all)
-            bashrc=1
-            emacs=1
-            neovim=1
-            tmux=1
-            vim=1
-            vimplugins=1
-            echo -e "Full setup will be performed!\n"
-            ;;
+# Set up our Emacs things. Besides the .emacs file that gets replaced, we will
+# be copying on top of a potentially existing Emacs bundled installation, so
+# that we don't ruin whatever was potentially already set up/
 
-        --bashrc)
-            bashrc=1
-            echo "Bashrc copy was selected."
-            ;;
+echo "Copying emacs-files/emacs.d to $HOME/.emacs.d/..."
+cp -R -f emacs-files/emacs.d $HOME/.emacs.d
 
-        --emacs)
-            emacs=1
-            echo "Emacs setup was selected."
-            ;;
+echo "Copying emacs-files/emacs to $HOME/.emacs..."
+cp -f emacs-files/emacs $HOME/.emacs
 
-        --neovim)
-            neovim=1
-            vim=1
-            echo "Neovim setup was selected. This will also include the Vim basics."
-            ;;
-
-        --tmux)
-            tmux=1
-            echo "Tmux setup was selected."
-            ;;
-
-        --vim)
-            vim=1
-            echo "Vim setup was selected."
-            ;;
-
-        --vimplugins)
-            vimplugins=1
-            echo "Vim Plugins setup was selected."
-
-            if [ $vim -ne 0 ]; then
-                echo "Warning: Vim plugins was selected without basic Vim. \
-                      It will be assumed basic Vim is ready."
-            fi
-            ;;
-    esac
-done
-
-# Copy bashrc to the Home folder.
-if [ $bashrc -eq 1 ]; then
-    cp bashrc $HOME/.bashrc
+if [ ! -d "$HOME/Documents" ]; then
+    echo -e "\nDocuments folder not found. Creating it right now...\n"
+    mkdir -p $HOME/Documents
 fi
+
+echo "Copying emacs-files/emacs-dark-mode-themes.txt to \
+$HOME/Documents/emacs-dark-mode-themes.txt..."
+
+cp -f emacs-files/emacs-dark-mode-themes.txt $HOME/Documents/
+
+echo "Copying emacs-files/emacs-light-mode-themes.txt to \
+$HOME/Documents/emacs-light-mode-themes.txt..."
+
+cp -f emacs-files/emacs-light-mode-themes.txt $HOME/Documents/
 
