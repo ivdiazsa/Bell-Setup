@@ -28,6 +28,7 @@
 (setq-default scroll-conservatively most-positive-fixnum)
 (setq-default frame-title-format
               '("" "%b%* (%f) %p/%P - GNU Emacs " emacs-version " at " system-name))
+(setq-default auth-sources '("~/.authinfo.gpg"))
 
 (defun toggle-line-numbers-type ()
   "Toggle between absolute and relative line numbering."
@@ -43,6 +44,10 @@
 (global-set-key (kbd "C-x x f") 'menu-set-font)
 (global-set-key (kbd "C-<f7>") (lambda () (interactive) (toggle-line-numbers-type)))
 (global-set-key (kbd "C-x C-k k") 'magit-kill-this-buffer)
+(global-set-key (kbd "M-g t") 'transpose-frame)
+(global-set-key (kbd "M-g r") 'rotate-frame-clockwise)
+(global-set-key (kbd "M-g i") 'flip-frame)
+(global-set-key (kbd "M-g o") 'flop-frame)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -57,7 +62,9 @@
  '(custom-enabled-themes '(deeper-blue))
 
  '(custom-safe-themes
-   '("3c68f48ea735abe65899f489271d11cbebbe87da7483acf9935ea4502efd0117"
+   '("f4835f97c034b7f3c512b177bbaebebee35d11baa0c9b95a9029e45962bc34c8"
+     "91d9dd2bc02a71a018738c815ba64be0ac0ec12815324fb28733c95d414f3f00"
+     "3c68f48ea735abe65899f489271d11cbebbe87da7483acf9935ea4502efd0117"
      "deb7ae3a735635a85c984ece4ce70317268df6027286998b0ea3d10f00764c9b"
      "3ea6a13b8119d69238e9651c05092d4491816b4d8066481e84e36901b6542089"
      "0973b33d2f15e6eaf88400eee3dc8357ad8ae83d2ca43c125339b25850773a70"
@@ -218,8 +225,45 @@
 
  '(display-time-mode t)
  '(global-display-line-numbers-mode t)
+
  '(package-selected-packages
-   '(lua-mode magit yaml-mode cmake-mode dockerfile-mode twilight-anti-bright-theme badwolf-theme clues-theme soothe-theme flatui-dark-theme subatomic-theme tangotango-theme afternoon-theme kaolin-themes gruber-darker-theme alect-themes apropospriate-theme ample-theme cyberpunk-theme moe-theme material-theme dracula-theme gruvbox-theme monokai-theme spacemacs-theme color-theme-modern color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized zenburn-theme csharp-mode treemacs))
+   '(transpose-frame
+     vscode-dark-plus-theme
+     vs-light-theme
+     vs-dark-theme
+     github-dark-vscode-theme
+     lua-mode
+     magit
+     yaml-mode
+     cmake-mode
+     dockerfile-mode
+     twilight-anti-bright-theme
+     badwolf-theme
+     clues-theme
+     soothe-theme
+     flatui-dark-theme
+     subatomic-theme
+     tangotango-theme
+     afternoon-theme
+     kaolin-themes
+     gruber-darker-theme
+     alect-themes
+     apropospriate-theme
+     ample-theme
+     cyberpunk-theme
+     moe-theme
+     material-theme
+     dracula-theme
+     gruvbox-theme
+     monokai-theme
+     spacemacs-theme
+     color-theme-modern
+     color-theme-sanityinc-tomorrow
+     color-theme-sanityinc-solarized
+     zenburn-theme
+     csharp-mode
+     treemacs))
+
  '(scroll-bar-mode nil)
  '(size-indication-mode t)
  '(warning-suppress-types '((comp) (comp) (comp))))
