@@ -16,8 +16,8 @@
 (add-to-list 'auto-mode-alist '("\\.props\\'" . xml-mode))
 (add-to-list 'auto-mode-alist '("\\.targets\\'" . xml-mode))
 
-(when (version<= "26.0.50" emacs-version)
-  (global-display-line-numbers-mode))
+;; (when (version<= "26.0.50" emacs-version)
+;;   (global-display-line-numbers-mode))
 
 (setq-default line-number-mode t)
 (setq-default column-number-mode t)
@@ -35,7 +35,7 @@
   (if (not (equal display-line-numbers-type 'relative))
       (setq-default display-line-numbers-type 'relative)
     (setq-default display-line-numbers-type 'absolute))
-  (global-display-line-numbers-mode 1))
+  (display-line-numbers-mode 1))
 
 (windmove-default-keybindings)
 
@@ -48,6 +48,7 @@
 (global-set-key (kbd "M-g r") 'rotate-frame-clockwise)
 (global-set-key (kbd "M-g i") 'flip-frame)
 (global-set-key (kbd "M-g o") 'flop-frame)
+(global-set-key (kbd "M-n") 'display-line-numbers-mode)
 
 ;; Reuse Dired buffer also when moving back up to parent folder.
 (add-hook 'dired-mode-hook
@@ -229,7 +230,6 @@
      default))
 
  '(display-time-mode t)
- 
  '(package-selected-packages
    '(transpose-frame
      vscode-dark-plus-theme
