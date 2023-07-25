@@ -49,6 +49,11 @@
 (global-set-key (kbd "M-g i") 'flip-frame)
 (global-set-key (kbd "M-g o") 'flop-frame)
 
+;; Reuse Dired buffer also when moving back up to parent folder.
+(add-hook 'dired-mode-hook
+          (lambda () (define-key dired-mode-map (kbd "^")
+                       (lambda () (interactive) (find-alternate-file "..")))))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -224,8 +229,7 @@
      default))
 
  '(display-time-mode t)
- '(global-display-line-numbers-mode t)
-
+ 
  '(package-selected-packages
    '(transpose-frame
      vscode-dark-plus-theme
@@ -277,3 +281,4 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
