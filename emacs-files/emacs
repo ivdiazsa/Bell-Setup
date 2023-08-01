@@ -13,6 +13,7 @@
 (add-to-list 'auto-mode-alist '("\\.ilproj\\'" . xml-mode))
 (add-to-list 'auto-mode-alist '("\\.proj\\'" . xml-mode))
 (add-to-list 'auto-mode-alist '("\\.depproj\\'" . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.sfxproj\\'" . xml-mode))
 (add-to-list 'auto-mode-alist '("\\.props\\'" . xml-mode))
 (add-to-list 'auto-mode-alist '("\\.targets\\'" . xml-mode))
 
