@@ -232,7 +232,8 @@
 
  '(display-time-mode t)
  '(package-selected-packages
-   '(transpose-frame
+   '(vimrc-mode
+     transpose-frame
      vscode-dark-plus-theme
      vs-light-theme
      vs-dark-theme
