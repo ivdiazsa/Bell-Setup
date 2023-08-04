@@ -1,0 +1,70 @@
+" Show line numbers.
+set number
+
+" Enable syntax highlighting.
+syntax on
+
+" Enable mouse usage.
+set mouse=a
+
+" Have Vim show matching parentheses, brackets, etc, when typing.
+set showmatch
+
+" Highlight searched text.
+set hlsearch
+
+" Display incomplete commands.
+set showcmd
+
+" Display a list with all command completion matches in the status line.
+set wildmenu
+
+" Show the cursor position at all times.
+set ruler
+
+" Search as you type.
+set incsearch
+
+" Switch tabs to spaces and adjust their size to 4.
+set expandtab
+set tabstop=4
+set shiftwidth=4
+
+" Highlight current line number.
+set cursorline
+set cursorlineopt=number
+
+" Configure GVim settings here.
+
+" Configure syntax highlighting themes here.
+
+" Easy pane resize keyboard shortcuts :)
+:map <S-H> <C-W><
+:map <S-J> <C-W>-
+:map <S-K> <C-W>+
+:map <S-L> <C-W>>
+
+" Shortcuts for commands I use often.
+:map <M-z> :set wrap! <Enter>
+:noremap <Leader><F7> :set relativenumber! <Enter>
+
+" Configure Netrw to be even more useful :)
+:map <F4> :Vexplore <Enter>
+let g:netrw_liststyle=3
+let g:netrw_browse_split=4
+let g:netrw_winsize=15
+let g:netrw_preview=1
+let g:netrw_altv=&sn
+
+" Certain file extensions share their syntax highlighting and properties with
+" other ones:
+"
+" - Project, Props, and Targets files all use XML syntax highlighting and
+"   2-spaced indentation.
+
+augroup lesser_known_file_extensions
+    autocmd!
+    autocmd BufNewFile,BufRead *.*proj   set filetype=xml | set tabstop=2 | set shiftwidth=2
+    autocmd BufNewFile,BufRead *.props   set filetype=xml | set tabstop=2 | set shiftwidth=2
+    autocmd BufNewFile,BufRead *.targets set filetype=xml | set tabstop=2 | set shiftwidth=2
+augroup END
