@@ -35,8 +35,20 @@ set cursorline
 set cursorlineopt=number
 
 " Configure GVim settings here.
+if has('gui_running')
+    set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Regular\ 9.5
+    set guioptions-=T
+    set guioptions-=r
+    set guioptions-=m
+    set guicursor-=a:blinkon0
+endif
 
 " Configure syntax highlighting themes here.
+if has('gui_running')
+    colorscheme luna
+else
+    colorscheme monokain
+endif
 
 " Easy pane resize keyboard shortcuts :)
 :map <S-H> <C-W><
@@ -68,3 +80,35 @@ augroup lesser_known_file_extensions
     autocmd BufNewFile,BufRead *.props   set filetype=xml | set tabstop=2 | set shiftwidth=2
     autocmd BufNewFile,BufRead *.targets set filetype=xml | set tabstop=2 | set shiftwidth=2
 augroup END
+
+" **********************************************************************
+" Plugins Configuration - Airline!
+" **********************************************************************
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'luna'
+let g:airline_section_z = '%3p%% %#__accent_bold#%{g:airline_symbols.linenr}%#__accent_bold#%4l/%L:%#__restore__#%3v'
+
+" Bug fix for Airline not showing on first window.
+set laststatus=2
+
+" **********************************************************************
+" Plugins Configuration - VSCode Theme (Vim-Code-Dark)!
+" **********************************************************************
+
+" Comment out 'g:codedark_modern' and uncomment this one for the
+" normal Visual Studio theme.
+" let g:codedark_conservative=1
+
+" Comment out 'g:codedark_conservative' and uncomment this one for the
+" modern Visual Studio Code theme.
+let g:codedark_modern=1
+
+" Italics are great but not all terminals support them.
+" Meanwhile, transparent background loooks awesome in terminals.
+if has('gui_running')
+    let g:codedark_italics=1
+else
+    let g:codedark_transparent=1
+endif
