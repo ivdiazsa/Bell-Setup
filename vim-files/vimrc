@@ -119,7 +119,7 @@ endif
 " Plugins Configuration - Vim Commentary!
 " **********************************************************************
 
-autocmd FileType bash,python,ruby,sh setlocal commentstring=#\ %s
+autocmd FileType bash,tmux,python,ruby,sh setlocal commentstring=#\ %s
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
 autocmd FileType html,xml setlocal commentstring=<!--\ %s\ -->
 
