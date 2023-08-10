@@ -38,6 +38,18 @@
     (setq-default display-line-numbers-type 'absolute))
   (display-line-numbers-mode 1))
 
+(defun next-word-start (&optional num)
+  "Move to the next (num) word's first character instead of before it."
+  (interactive "p")
+  (forward-word num)
+  (forward-char))
+
+(defun delete-to-word-start (&optional num)
+  "Delete the next (num) words until the following one's first character."
+  (interactive "p")
+  (kill-word num)
+  (delete-char 1))
+
 (windmove-default-keybindings)
 
 (global-set-key (kbd "C-h") 'delete-backward-char)
@@ -50,6 +62,8 @@
 (global-set-key (kbd "M-g i") 'flip-frame)
 (global-set-key (kbd "M-g o") 'flop-frame)
 (global-set-key (kbd "M-n") 'display-line-numbers-mode)
+(global-set-key (kbd "M-f") 'next-word-start)
+(global-set-key (kbd "M-d") 'delete-to-word-start)
 
 ;; Reuse Dired buffer also when moving back up to parent folder.
 (add-hook 'dired-mode-hook
