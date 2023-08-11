@@ -30,6 +30,10 @@ set expandtab
 set tabstop=4
 set shiftwidth=4
 
+" Enable auto indenting.
+set autoindent
+set smartindent
+
 " Highlight current line number.
 set cursorline
 set cursorlineopt=number
@@ -124,4 +128,7 @@ endif
 autocmd FileType bash,tmux,python,ruby,sh setlocal commentstring=#\ %s
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
 autocmd FileType html,xml setlocal commentstring=<!--\ %s\ -->
+
+" Easy shortcut to open the Git Interface.
+:map <M-g> :Git <Enter>
 
