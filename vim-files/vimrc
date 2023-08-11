@@ -40,6 +40,8 @@ if has('gui_running')
     set guioptions-=T
     set guioptions-=r
     set guioptions-=m
+    set guioptions-=l
+    set guioptions-=L
     set guicursor-=a:blinkon0
 endif
 
