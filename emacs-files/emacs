@@ -62,8 +62,9 @@
 (global-set-key (kbd "M-g i") 'flip-frame)
 (global-set-key (kbd "M-g o") 'flop-frame)
 (global-set-key (kbd "M-n") 'display-line-numbers-mode)
-(global-set-key (kbd "M-f") 'next-word-start)
-(global-set-key (kbd "M-d") 'delete-to-word-start)
+(global-set-key (kbd "M-F") 'next-word-start)
+(global-set-key (kbd "M-D") 'delete-to-word-start)
+(global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
 
 ;; Reuse Dired buffer also when moving back up to parent folder.
 (add-hook 'dired-mode-hook
@@ -246,7 +247,8 @@
 
  '(display-time-mode t)
  '(package-selected-packages
-   '(vimrc-mode
+   '(wrap-region
+     vimrc-mode
      transpose-frame
      vscode-dark-plus-theme
      vs-light-theme
@@ -292,7 +294,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Ubuntu Mono derivative Powerline" :foundry "DAMA" :slant normal :weight normal :height 271 :width normal)))))
+)
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
