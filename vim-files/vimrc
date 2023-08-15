@@ -129,6 +129,22 @@ autocmd FileType bash,tmux,python,ruby,sh setlocal commentstring=#\ %s
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
 autocmd FileType html,xml setlocal commentstring=<!--\ %s\ -->
 
+" **********************************************************************
+" Plugins Configuration - Vim Git (Vim-Fugitive)!
+" **********************************************************************
+
 " Easy shortcut to open the Git Interface.
 :map <M-g> :Git <Enter>
+
+" **********************************************************************
+" Plugins Configuration - Tag List!
+" **********************************************************************
+
+" Easy shortcut to open/close the Tagbar.
+:noremap <F8> :TlistToggle <Enter>
+
+let Tlist_Show_One_File = 1
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Use_Right_Window = 1
 
