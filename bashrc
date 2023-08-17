@@ -150,6 +150,15 @@ fi
 # turned out to be super annoying :(
 shopt -s direxpand
 
+function ncd()
+{
+  local path=""
+  for (( i=1; i<=$1; i++ )); do
+    path="../$path"
+  done
+  cd $path
+}
+
 # Returning to the root of a Git repository is always a convenient portal shortcut.
 alias cdroot='cd $(git rev-parse --show-toplevel)'
 alias avalonia-msbuild=$HOME/Documents/Tools/AvaloniaMSBuildLogViewer/app/StructuredLogViewer.Avalonia
@@ -171,6 +180,4 @@ fi
 if ! [[ "$PATH" == *"diff-so-fancy"* ]]; then
     export PATH=$PATH:$HOME/Documents/Tools/diff-so-fancy
 fi
-
-# export PATH=$HOME/Downloads/cmake-3.17.0-Linux-x86_64/bin:$PATH
 
