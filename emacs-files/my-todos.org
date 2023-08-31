@@ -1,0 +1,33 @@
+* Work Items
+
+** Not Started [#2] Remove the Legacy Testing Infrastructure
+:Created: 2023/08/31  4:08 pm PDT
+
+As part of the migration to the Merged Wrappers system, we won't be using the
+Legacy system, so we ought to clean it up.
+
+** Blocked [#2] Create and Enable the TestReadyToRun Libraries Pipeline
+- State "Blocked"    from "Active"     [2023-08-31 Thu 16:17] \\
+  Pipelines are now failing with an error saying there is no Crossgen2 for .NET 9.
+  Likely solution is to specify it to compile for .NET 8, rather than the latest.
+
+- State "Active"     from "Not Started" [2023-08-31 Thu 16:16]
+
+:Created: 2023/08/31  4:11 pm PDT
+
+As part of the Crossgen2 testing coverage efforts, we now want to get some routine
+tests going with -p:TestReadyToRun=true, in order to catch more R2R regressions
+more easily.
+
+** Blocked [#2] Add New Test to Monitor Jitted Methods at Runtime
+- State "Blocked"    from "Active"     [2023-08-31 Thu 16:19] \\
+  Pipelines are failing because the test is finding approximately 200 jitted methods.
+  Expecting 100 is already a high threshold, so something weird is going on.
+
+- State "Active"     from "Not Started" [2023-08-31 Thu 16:18]
+
+:Created: 2023/08/31  4:15 pm PDT
+
+We've had a few instances where JIT regressions haven't been found, until they've
+become a bigger problem. This test aims to catch abnormally high increases in
+jitted methods, so we can investigate them sooner.

@@ -301,3 +301,52 @@
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+
+;; Org-Mode Configuration!
+
+;; New Item Templates!
+(setq org-capture-templates
+      '(
+        ("n" "New Work Item Task"
+         entry (file+headline "~/Documents/my-todos.org" "Work Items")
+         "** Not Started [#2] %?\n:Created: %<%Y/%m/%e %l:%M %P %Z>\n "
+         :empty-lines 0)
+       )
+)
+
+;; Item States!
+(setq org-todo-keywords
+      '((sequence "Not Started(t)"
+                  "Active(a!)"
+                  "Inactive(i@/!)"
+                  "Researching(r!)"
+                  "Blocked(b@/!)"
+                  "Waiting(w@/!)"
+                  "Warning(e@/!)"
+                  "|"
+                  "Complete(c!)"
+                  "Backlogged(l@/!)"
+                  "Discarded(d@/!)"
+       ))
+)
+
+;; Colors!
+(setq org-todo-keyword-faces
+      '(
+        ("Not Started" . (:foreground "#00CDCD" :weight bold))
+        ("Active"      . (:foreground "#3BD1B7" :weight bold))
+        ("Inactive"    . (:foreground "#005EB8" :weight bold))
+        ("Researching" . (:foreground "#FB7306" :weight bold))
+        ("Blocked"     . (:foreground "#A348C8" :weight bold))
+        ("Waiting"     . (:foreground "#C8A348" :weight bold))
+        ("Warning"     . (:foreground "#FF1100" :weight bold))
+        ("Complete"    . (:foreground "#19D22A" :weight bold))
+        ("Backlogged"  . (:foreground "#919191" :weight bold))
+        ("Discarded"   . (:foreground "#D65073" :weight bold))
+       )
+)
+
+;; Setting priorities to be with numbers.
+(setq org-highest-priority 0)
+(setq org-lowest-priority 3)
+(setq org-default-priority 2)
