@@ -338,7 +338,7 @@
         ("Inactive"    . (:foreground "#005EB8" :weight bold))
         ("Researching" . (:foreground "#FB7306" :weight bold))
         ("Blocked"     . (:foreground "#A348C8" :weight bold))
-        ("Waiting"     . (:foreground "#C8A348" :weight bold))
+        ("Waiting"     . (:foreground "#C8A347" :weight bold))
         ("Warning"     . (:foreground "#FF1100" :weight bold))
         ("Complete"    . (:foreground "#19D22A" :weight bold))
         ("Backlogged"  . (:foreground "#919191" :weight bold))

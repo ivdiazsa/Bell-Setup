@@ -70,11 +70,11 @@ endif
 
 " Configure Netrw to be even more useful :)
 :map <F4> :Vexplore <Enter>
-let g:netrw_liststyle=3
-let g:netrw_browse_split=4
-let g:netrw_winsize=15
-let g:netrw_preview=1
-let g:netrw_altv=&sn
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_winsize = 15
+let g:netrw_preview = 1
+let g:netrw_altv = &sn
 
 " Certain file extensions share their syntax highlighting and properties with
 " other ones:
@@ -87,6 +87,14 @@ augroup lesser_known_file_extensions
     autocmd BufNewFile,BufRead *.*proj   set filetype=xml | set tabstop=2 | set shiftwidth=2
     autocmd BufNewFile,BufRead *.props   set filetype=xml | set tabstop=2 | set shiftwidth=2
     autocmd BufNewFile,BufRead *.targets set filetype=xml | set tabstop=2 | set shiftwidth=2
+augroup END
+
+" Certain file formats use a different indentation from the usual 4 spaces.
+
+augroup different_indentation_files
+    autocmd!
+    autocmd BufNewFile,BufRead *.yml  set tabstop=2 | set shiftwidth=2
+    autocmd BufNewFile,BufRead *.yaml set tabstop=2 | set shiftwidth=2
 augroup END
 
 " **********************************************************************
@@ -111,21 +119,21 @@ set laststatus=2
 
 " Comment out 'g:codedark_conservative' and uncomment this one for the
 " modern Visual Studio Code theme.
-let g:codedark_modern=1
+let g:codedark_modern = 1
 
 " Italics are great but not all terminals support them.
 " Meanwhile, transparent background loooks awesome in terminals.
 if has('gui_running')
-    let g:codedark_italics=1
+    let g:codedark_italics = 1
 else
-    let g:codedark_transparent=1
+    let g:codedark_transparent = 1
 endif
 
 " **********************************************************************
 " Plugins Configuration - Vim Commentary!
 " **********************************************************************
 
-autocmd FileType bash,tmux,python,ruby,sh setlocal commentstring=#\ %s
+autocmd FileType bash,tmux,python,ruby,sh,yaml setlocal commentstring=#\ %s
 autocmd FileType c,cpp,cs,java setlocal commentstring=//\ %s
 autocmd FileType html,xml setlocal commentstring=<!--\ %s\ -->
 
@@ -147,4 +155,38 @@ let Tlist_Show_One_File = 1
 let Tlist_GainFocus_On_ToggleOpen = 1
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_Right_Window = 1
+
+" **********************************************************************
+" Plugins Configuration - Vim Org-Mode!
+" **********************************************************************
+
+let g:org_heading_shade_leading_stars = 0
+
+let g:org_todo_keywords = [
+                            \'Not Started',
+                            \'Active',
+                            \'Inactive',
+                            \'Researching',
+                            \'Blocked',
+                            \'Waiting',
+                            \'Warning',
+                            \'|',
+                            \'Complete',
+                            \'Backlogged',
+                            \'Discarded'
+                         \]
+
+let g:org_todo_keyword_faces =
+\[
+\  ['Not Started', [':foreground #00CDCD', ':weight bold']],
+\  ['Active',      [':foreground #3BD1B7', ':weight bold']],
+\  ['Inactive',    [':foreground #005EB8', ':weight bold']],
+\  ['Researching', [':foreground #FB7306', ':weight bold']],
+\  ['Blocked',     [':foreground #A348C8', ':weight bold']],
+\  ['Waiting',     [':foreground #C8A347', ':weight bold']],
+\  ['Warning',     [':foreground #FF1100', ':weight bold']],
+\  ['Complete',    [':foreground #19D22A', ':weight bold']],
+\  ['Backlogged',  [':foreground #919191', ':weight bold']],
+\  ['Discarded',   [':foreground #D65073', ':weight bold']],
+\]
 
