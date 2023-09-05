@@ -49,6 +49,10 @@ if has('gui_running')
     set guicursor-=a:blinkon0
 endif
 
+" New splits are more comfortable when opened as secondaries.
+set splitright
+set splitbelow
+
 " Configure syntax highlighting themes here.
 if has('gui_running')
     colorscheme luna
@@ -67,6 +71,10 @@ endif
 :noremap <Leader><F7> :set relativenumber! <Enter>
 :map <M-o> :copen <Enter>
 :map <M-c> :cclose <Enter>
+
+" Vim's Terminal Configuration.
+:map <F3> :vertical :terminal <Enter>
+:tnoremap <Esc> <C-W>N
 
 " Configure Netrw to be even more useful :)
 :map <F4> :Vexplore <Enter>
