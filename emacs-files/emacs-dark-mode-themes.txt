@@ -1,108 +1,117 @@
 My Emacs Dark Mode Themes:
 
-- afternoon
-- alect-black
-- alect-black-alt
-- ample
-- ample-flat
-- apropospriate-dark
+Legend:
+* Great
+! Ideal
+? Great but...
+- Good or no veredict
+D Dim
+B Bright
+H High Contrast-ish
+
+* afternoon
+* alect-black
+* alect-black-alt
+D ample
+D ample-flat
+D apropospriate-dark
 - badwolf
-- bharadwaj-slate
-- billw
+B bharadwaj-slate (Green palette)
+H billw
 - blue-gnus* (This one seems to only work with some specific other themes)
-- blue-mood
-- blue-sea
-- calm-forest
-- charcoal-black
-- clarity (This one has a pretty neat Status Bar)
-- classic
-- clues*
-- cobalt (This one's a classic)
-- comidia*
-- cyberpunk
-- dark-blue2
-- dark-font-lock (This one requires a gray-compatible background)
+B blue-mood (Blue/White palette)
+D blue-sea (Some keywords are bright)
+? calm-forest
+D charcoal-black (Some keywords are bright)
+* clarity (This one has a pretty neat Status Bar)
+B classic
+D clues* (Very dark theme)
+* cobalt (This one's a classic)
+H comidia
+! cyberpunk
+* dark-blue2
+- dark-font-lock (This one requires a gray-font-compatible background)
 - dark-gnus* (This one seems to only work with some specific other themes)
 - dark-green* (This one seems Status Bar only)
-- dark-laptop*
-- deep-blue
-- deeper-blue
-- desert
-- dracula
-- euphoria
-- flatui-dark
-- gnome
-- gnome2
-- goldenrod
-- gray30
-- gruber-darker
-- gruvbox
-- gruvbox-dark-hard
-- gruvbox-dark-medium
-- gruvbox-dark-soft
-- hober
-- jonadabian
-- jonadabian-slate
-- jsc-dark
-- julie
-- kaolin-aurora (This one has a pretty neat Status Bar)
-- kaolin-blossom
-- kaolin-bubblegum
-- kaolin-dark
-- kaolin-eclipse
-- kaolin-galaxy
-- kaolin-mono-dark
-- kaolin-ocean
-- kaolin-shiva
-- kaolin-temple
-- kaolin-valley-dark
-- kingsajz
-- late-night
-- lawrence
-- ld-dark
-- lethe
-- manoj-dark
-- material
-- matrix
-- midnight
-- misterioso
-- modus-vivendi
-- moe-dark (This one lights up the Line Number)
-- oswald
+! dark-laptop
+* deep-blue
+! deeper-blue
+D desert
+! dracula (bolds and italic lns)
+? euphoria
+D flatui-dark
+B gnome
+B gnome2
+H goldenrod (Very gold and yellow)
+B gray30
+H gruber-darker
+D gruvbox
+? gruvbox-dark-hard
+D gruvbox-dark-medium
+D gruvbox-dark-soft
+H hober
+D jonadabian
+B jonadabian-slate
+H jsc-dark (Red/Orange/Yellow palette only)
+D julie
+! kaolin-aurora (This one has a pretty neat Status Bar)
+D kaolin-blossom
+* kaolin-bubblegum
+* kaolin-dark
+* kaolin-eclipse (Purple-ish palette)
+! kaolin-galaxy
+D kaolin-mono-dark (Green and slightly blue palette)
+! kaolin-ocean
+* kaolin-shiva (Purple-ish palette)
+D kaolin-temple
+D kaolin-valley-dark
+B kingsajz
+D late-night (Shades of darkness)
+H lawrence (Green palette)
+! ld-dark
+H lethe (Great high-contrast theme!)
+H manoj-dark
+D material
+H matrix (Green/Yellow palette)
+D midnight (Dim but great theme!)
+B misterioso
+! modus-vivendi
+D moe-dark (This one lights up the Line Number with background)
+H oswald
 - parus
-- pok-wob
-- pok-wog
+H pok-wob (Yellow with light blue mostly palette)
+B pok-wog (Yellow with light blue mostly palette)
 - railscast
-- raspopovic
-- renegade
-- resolve
-- retro-green
-- retro-orange
+H raspopovic (High contrast with blue background)
+H renegade
+B resolve
+H retro-green (Single green palette)
+H retro-orange (Single orange palette)
 - robin-hood (This one seems like just a background)
 - ryerson
-- salmon-font-lock (This one seems like just font colors)
-- sanityinc-solarized-dark
-- sanityinc-tomorrow-blue
-- sanityinc-tomorrow-bright
-- sanityinc-tomorrow-eighties
-- sanityinc-tomorrow-night
-- seti
-- shaman
-- simple-1*
-- sitaramv-solaris
-- soothe
-- spacemacs-dark
-- subatomic
-- subdued
-- subtle-hacker
-- taming-mr-arneson
-- tango-dark
-- tangotango
-- taylor*
-- tsdh-dark
-- tty-dark
-- twilight-anti-bright
-- wheatgrass
-- wombat
-- word-perfect
-- zenburn
+B salmon-font-lock (This one seems like just font colors)
+D sanityinc-solarized-dark
+* sanityinc-tomorrow-blue
+! sanityinc-tomorrow-bright
+D sanityinc-tomorrow-eighties
+D sanityinc-tomorrow-night
+D seti (Dim but great theme)
+B shaman
+! simple-1 (Emacs terminal default dark theme!)
+B sitaramv-solaris (Blue background)
+D soothe
+* spacemacs-dark (Despite being dim, it's a great theme!)
+B subatomic (Atom-like theme)
+* subdued
+B subtle-hacker
+H taming-mr-arneson
+* tango-dark (Very green palette)
+! tangotango
+H taylor
+D tsdh-dark
+* tty-dark (Nice but some words can be too dim at times)
+D twilight-anti-bright (Dim but really good theme)
+H wheatgrass (Another green/yellow/bluish palette)
+* wombat
+D word-perfect (Blue background)
+D zenburn

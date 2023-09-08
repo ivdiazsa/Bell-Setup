@@ -30,6 +30,7 @@
 (setq-default frame-title-format
               '("" "%b%* (%f) %p/%P - GNU Emacs " emacs-version " at " system-name))
 (setq-default auth-sources '("~/.authinfo.gpg"))
+(setq-default ediff-forward-word-function 'forward-char)
 
 (defun toggle-line-numbers-type ()
   "Toggle between absolute and relative line numbering."
@@ -52,6 +53,7 @@
 
 (windmove-default-keybindings)
 
+;; Useful and Productive Keybindings!
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "C-x x w") 'toggle-word-wrap)
 (global-set-key (kbd "C-x x f") 'menu-set-font)
@@ -66,6 +68,19 @@
 (global-set-key (kbd "M-D") 'delete-to-word-start)
 (global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
 (global-set-key (kbd "C-x C-M-b") 'ibuffer)
+(global-set-key (kbd "C-x E") 'erase-buffer)
+(global-set-key (kbd "C-x t h") 'sgml-tag)
+
+;; Keybindings for easy split windows resizing.
+(global-set-key (kbd "C-<up>") 'enlarge-window)
+(global-set-key (kbd "C-<down>") 'shrink-window)
+(global-set-key (kbd "C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "C-<right>") 'enlarge-window-horizontally)
+
+;; It's really annoying to have Emacs GUI minimized with an accidental typo :(
+(when (display-graphic-p)
+  (global-unset-key (kbd "C-z"))
+  (global-unset-key (kbd "C-x C-z")))
 
 ;; Reuse Dired buffer also when moving back up to parent folder.
 (add-hook 'dired-mode-hook
@@ -284,7 +299,6 @@
      color-theme-sanityinc-tomorrow
      color-theme-sanityinc-solarized
      zenburn-theme
-     csharp-mode
      treemacs))
 
  '(scroll-bar-mode nil)
