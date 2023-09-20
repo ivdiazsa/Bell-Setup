@@ -79,6 +79,7 @@
 (global-set-key (kbd "C-x C-M-b") 'ibuffer)
 (global-set-key (kbd "C-x E") 'erase-buffer)
 (global-set-key (kbd "C-x t h") 'sgml-tag)
+(global-set-key (kbd "C->") 'dot-mode-execute)
 
 ;; Keybindings for easy split windows resizing.
 
@@ -117,12 +118,16 @@
                ("YAML"      (mode . yaml-mode))
                ("Terminals" (mode . term-mode))
                ("Dired"     (mode . dired-mode))
+               ("Magit"     (name . "magit*"))
                ("Emacs"     (or
                              (name . "^\\*scratch\\*$")
+                             (name . "^\\*grep\\*$")
+                             (name . "^\\*Backtrace\\*$")
                              (name . "^\\*Completions\\*$")
                              (name . "^\\*GNU Emacs\\*$")
                              (name . "^\\*Help\\*$")
-                             (name . "^\\*Messages\\*$")))))))
+                             (name . "^\\*Messages\\*$")
+                             (name . "^\\*Packages\\*$")))))))
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
@@ -142,7 +147,12 @@
  '(display-time-mode t)
 
  '(package-selected-packages
-   '(wrap-region
+   '(dot-mode
+     multiple-cursors
+     csharp-mode
+     julia-mode
+     doom-themes
+     wrap-region
      vimrc-mode
      transpose-frame
      vscode-dark-plus-theme
