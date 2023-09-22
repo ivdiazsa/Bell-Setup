@@ -21,6 +21,9 @@ public class WishyTerminal
             {
                 input = Console.ReadKey();
 
+                // IMPORTANT: Add the Backspace handler. Right now, the Backspace
+                // Key prints a weird character.
+
                 switch (input.Key)
                 {
                     case ConsoleKey.Enter:
