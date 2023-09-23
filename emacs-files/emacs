@@ -33,6 +33,7 @@
               '("" "%b%* (%f) %p/%P - GNU Emacs " emacs-version " at " system-name))
 (setq-default auth-sources '("~/.authinfo.gpg"))
 (setq-default ediff-forward-word-function 'forward-char)
+(setq-default magit-blame-activated nil)
 
 ;; Function to easily toggle between absolute/normal and relative line numbering.
 
@@ -59,27 +60,50 @@
   (kill-word num)
   (delete-char 1))
 
+;; Function to easily toggle on/off Magit's blame mode.
+
+(defun toggle-magit-blame ()
+  "Toggle magit-blame on/off"
+  (cond ((equal magit-blame-activated nil)
+         (magit-blame-addition)
+         (setq-default magit-blame-activated t))
+        ((equal magit-blame-activated t)
+         (magit-blame-quit)
+         (setq-default magit-blame-activated nil))))
+
 (windmove-default-keybindings)
 
 ;; Useful and Productive Keybindings!
 
-(global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "C-x x w") 'toggle-word-wrap)
 (global-set-key (kbd "C-x x f") 'menu-set-font)
 (global-set-key (kbd "C-<f7>") (lambda () (interactive) (toggle-line-numbers-type)))
-(global-set-key (kbd "C-x C-k k") 'magit-kill-this-buffer)
+(global-set-key (kbd "M-n") 'display-line-numbers-mode)
+(global-set-key (kbd "C-x C-M-b") 'ibuffer)
+
+;; Add check to only make it available when dot-mode is enabled.
+(global-set-key (kbd "C->") 'dot-mode-execute)
+
+;; Text modifying and navigation keyboard shortcuts
+
+(global-set-key (kbd "C-h") 'delete-backward-char)
+(global-set-key (kbd "M-F") 'next-word-start)
+(global-set-key (kbd "M-D") 'delete-to-word-start)
+(global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
+(global-set-key (kbd "C-x E") 'erase-buffer)
+(global-set-key (kbd "C-x t h") 'sgml-tag)
+
+;; Frame manipulation keyboard shortcuts
+
 (global-set-key (kbd "M-g t") 'transpose-frame)
 (global-set-key (kbd "M-g r") 'rotate-frame-clockwise)
 (global-set-key (kbd "M-g i") 'flip-frame)
 (global-set-key (kbd "M-g o") 'flop-frame)
-(global-set-key (kbd "M-n") 'display-line-numbers-mode)
-(global-set-key (kbd "M-F") 'next-word-start)
-(global-set-key (kbd "M-D") 'delete-to-word-start)
-(global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
-(global-set-key (kbd "C-x C-M-b") 'ibuffer)
-(global-set-key (kbd "C-x E") 'erase-buffer)
-(global-set-key (kbd "C-x t h") 'sgml-tag)
-(global-set-key (kbd "C->") 'dot-mode-execute)
+
+;; Magit keyboard shortcuts.
+
+(global-set-key (kbd "C-x C-k k") 'magit-kill-this-buffer)
+(global-set-key (kbd "C-x M-b") (lambda () (interactive) (toggle-magit-blame)))
 
 ;; Keybindings for easy split windows resizing.
 
