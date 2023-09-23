@@ -5,7 +5,8 @@ internal static class WishyConsole
 {
     private static ConsoleKeyInfo _input;
     private static StringBuilder _commandSb = new StringBuilder();
-    private static string _prompt = string.Empty;
+
+    internal static string Prompt = string.Empty;
 
     public static void Init()
     {
@@ -13,8 +14,16 @@ internal static class WishyConsole
         // setting the prompt, and who knows what other neat features that require
         // initializing I will come up with in the future :)
 
-        _prompt = $"\n[ CWD: {System.IO.Directory.GetCurrentDirectory()} ]::> ";
+        Prompt = $"\n[ CWD: {System.IO.Directory.GetCurrentDirectory()} ]::> ";
         return ;
+    }
+
+    // Commands like "Cd" can make the prompt need to be changed, so this function
+    // will be in charge of that.
+
+    public static void UpdatePrompt()
+    {
+        Prompt = $"\n[ CWD: {System.IO.Directory.GetCurrentDirectory()} ]::> ";
     }
 
     // Read the user's input on a char-by-char basis. The reason for this instead
@@ -25,7 +34,7 @@ internal static class WishyConsole
     {
         // Clean the string builder from the previous command.
         _commandSb.Clear();
-        Console.Write(_prompt);
+        Console.Write(Prompt);
 
         do
         {

@@ -1,0 +1,21 @@
+Mishy-Ideas for the Wishy Terminal!
+
+Commands:
+
+* Change Directory Command
+- List Directory Contents Command
+- Run Programs/Apps/Scripts/etc Command
+
+Must-Have Features:
+
+- Colors for the Terminal!
+- Chaining Commands (&&)
+- Piping Commands (||)
+- Commands History
+- Commands Tab-Completion
+- PATH Commands
+
+Very Desirable Features:
+
+- Custom Prompts
+- Commands Ctrl+D Suggestions
