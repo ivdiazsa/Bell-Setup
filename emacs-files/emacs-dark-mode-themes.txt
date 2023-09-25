@@ -37,6 +37,13 @@ H comidia
 * deep-blue
 ! deeper-blue
 D desert
+
+* doom-1337
+* doom-Iosvkem
+! doom-acario-dark
+! doom-dark+
+! doom-xcode
+
 ! dracula (bolds and italic lns)
 ? euphoria
 D flatui-dark
