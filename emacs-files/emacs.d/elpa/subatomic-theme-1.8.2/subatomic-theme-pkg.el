@@ -1,2 +1,0 @@
-;; Generated package description from subatomic-theme.el  -*- no-byte-compile: t -*-
-(define-package "subatomic-theme" "1.8.2" "Low contrast bluish color theme" 'nil :commit "2d5acd143a153e16372d59000e57d76291ab81dd" :authors '(("John Olsson" . "john@cryon.se")) :maintainer '("John Olsson" . "john@cryon.se") :keywords '("color-theme" "blue" "low contrast") :url "https://github.com/cryon/subatomic")

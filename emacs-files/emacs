@@ -5,8 +5,12 @@
 (package-initialize)
 
 (require 'package)
+
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
 ;; Some file extensions use the same syntax as XML. Let Emacs to enable xml-mode
@@ -33,7 +37,6 @@
               '("" "%b%* (%f) %p/%P - GNU Emacs " emacs-version " at " system-name))
 (setq-default auth-sources '("~/.authinfo.gpg"))
 (setq-default ediff-forward-word-function 'forward-char)
-(setq-default magit-blame-activated nil)
 
 ;; Function to easily toggle between absolute/normal and relative line numbering.
 
@@ -60,22 +63,12 @@
   (kill-word num)
   (delete-char 1))
 
-;; Function to easily toggle on/off Magit's blame mode.
-
-(defun toggle-magit-blame ()
-  "Toggle magit-blame on/off"
-  (cond ((equal magit-blame-activated nil)
-         (magit-blame-addition)
-         (setq-default magit-blame-activated t))
-        ((equal magit-blame-activated t)
-         (magit-blame-quit)
-         (setq-default magit-blame-activated nil))))
-
 (windmove-default-keybindings)
 
 ;; Useful and Productive Keybindings!
 
 (global-set-key (kbd "C-x x w") 'toggle-word-wrap)
+(global-set-key (kbd "C-x x t") 'toggle-truncate-lines)
 (global-set-key (kbd "C-x x f") 'menu-set-font)
 (global-set-key (kbd "C-<f7>") (lambda () (interactive) (toggle-line-numbers-type)))
 (global-set-key (kbd "M-n") 'display-line-numbers-mode)
@@ -103,7 +96,7 @@
 ;; Magit keyboard shortcuts.
 
 (global-set-key (kbd "C-x C-k k") 'magit-kill-this-buffer)
-(global-set-key (kbd "C-x M-b") (lambda () (interactive) (toggle-magit-blame)))
+(global-set-key (kbd "C-x M-b") 'magit-blame)
 
 ;; Keybindings for easy split windows resizing.
 
@@ -148,10 +141,12 @@
                              (name . "^\\*grep\\*$")
                              (name . "^\\*Backtrace\\*$")
                              (name . "^\\*Completions\\*$")
+                             (name . "^\\*Find\\*$")
                              (name . "^\\*GNU Emacs\\*$")
                              (name . "^\\*Help\\*$")
                              (name . "^\\*Messages\\*$")
-                             (name . "^\\*Packages\\*$")))))))
+                             (name . "^\\*Packages\\*$")
+                             (name . "^\\*Warnings\\*$")))))))
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
@@ -252,14 +247,21 @@
 ;;  Org-Mode Configuration!
 ;; *************************
 
+(setq-default org-hide-emphasis-markers t)
+
 ;; New Item Templates!
 
 (setq org-capture-templates
       '(
         ("n" "New Work Item Task"
          entry (file+headline "~/Documents/my-todos.org" "Work Items")
-         "** Not Started [#2] %?\n:Created: %<%Y/%m/%e %l:%M %P %Z>\n "
-         :empty-lines 0)
+         "** Not Started [#2] %^{Job Item Title}\n\n\
+*- Repository: %^{Repository name (what goes after github.com/)}*\n\
+*- Issue Number: %^{Issue/PR number}*\n\
+*- Link: [[https://github.com/%\\2/issues/%\\3]]*\n\n\
+:Created: %<%Y/%m/%e %l:%M %P %Z>\n\n\
+%^{Description}\n"
+         :empty-lines-before 3)
        )
 )
 
