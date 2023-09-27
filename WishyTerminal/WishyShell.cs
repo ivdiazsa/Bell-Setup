@@ -5,6 +5,8 @@ internal static class WishyShell
 {
     private const int SHELL_COMMAND_SUCCESS = 0;
 
+    // Int ExecuteCommand():
+    //
     // Main method that will process the command read and sent by the console,
     // and do the necessary operations to run and execute it.
 
