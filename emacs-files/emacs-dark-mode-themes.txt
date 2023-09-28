@@ -3,7 +3,7 @@ My Emacs Dark Mode Themes:
 Legend:
 * Great
 ! Ideal
-? Great but...
+? Great/Good but...
 - Good or no veredict
 D Dim
 B Bright
@@ -41,7 +41,62 @@ D desert
 * doom-1337
 * doom-Iosvkem
 ! doom-acario-dark
+? doom-ayu-dark (Mainly comprised of shades of orange)
+? doom-ayu-mirage (Mainly comprised of shades of orange)
+* doom-badger
+? doom-bluloco-dark
+! doom-challenger-deep
+D doom-city-lights
 ! doom-dark+
+! doom-dracula
+* doom-ephemeral
+B doom-fairy-floss
+D doom-feather-dark
+? doom-gruvbox (Same "issue" as with the normal gruvbox themes)
+! doom-henna
+D doom-homage-black
+* doom-horizon
+H doom-ir-black
+? doom-lantern
+! doom-laserwave
+D doom-manegarm
+* doom-material
+! doom-material-dark
+D doom-meltbus (Black and White only theme)
+D doom-miramare
+! doom-molokai
+? doom-monokai-classic
+! doom-monokai-machine
+* doom-monokai-octagon
+? doom-monokai-pro
+? doom-monokai-ristretto
+! doom-monokai-spectrum
+D doom-moonlight (Despite being a dim theme, the color contrast and palette is amazing)
+* doom-nord
+* doom-nord-aurora
+B doom-nova
+* doom-oceanic-next
+D doom-oksolar-dark
+* doom-old-hope
+* doom-one (A bit dim but good)
+D doom-opera
+D doom-outrun-electric (Despite being very dim, it's pleasant)
+* doom-palenight
+? doom-peacock
+D doom-pine
+D doom-plain-dark (Black and White only theme)
+* doom-rouge
+B doom-shades-of-purple (Not bright as in light, but as in shiny. Amazing theme though)
+* doom-snazzy
+D doom-solarized-dark
+D doom-solarized-dark-high-contrast
+D doom-sourcerer
+D doom-spacegrey
+* doom-tokyo-night
+D doom-tomorrow-night
+* doom-vibrant (Very dim but still kinda fits in the normal category)
+D doom-wilmersdorf
+B doom-zenburn
 ! doom-xcode
 
 ! dracula (bolds and italic lns)
