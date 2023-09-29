@@ -13,6 +13,10 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
+;; Load my Org-Mode configuration.
+
+(load-file "~/.emacs.d/my-org-mode-config.el")
+
 ;; Some file extensions use the same syntax as XML. Let Emacs to enable xml-mode
 ;; by default when editing these types of files.
 
@@ -152,6 +156,11 @@
           (lambda ()
             (ibuffer-switch-to-saved-filter-groups "default")))
 
+
+;; However, I prefer to only see the categories that have buffers open.
+
+(setq-default ibuffer-show-empty-filter-groups nil)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -164,6 +173,7 @@
  '(column-number-mode t)
  '(custom-enabled-themes '(deeper-blue))
  '(display-time-mode t)
+ '(menu-bar-mode nil)
 
  '(package-selected-packages
    '(dot-mode
@@ -211,6 +221,7 @@
 
  '(scroll-bar-mode nil)
  '(size-indication-mode t)
+ '(tool-bar-mode nil)
  '(warning-suppress-types '((comp) (comp) (comp))))
 
 (custom-set-faces
@@ -241,66 +252,3 @@
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
-
-
-;; *************************
-;;  Org-Mode Configuration!
-;; *************************
-
-(setq-default org-hide-emphasis-markers t)
-
-;; New Item Templates!
-
-(setq org-capture-templates
-      '(
-        ("n" "New Work Item Task"
-         entry (file+headline "~/Documents/my-todos.org" "Work Items")
-         "** Not Started [#2] %^{Job Item Title}\n\n\
-*- Repository: %^{Repository name (what goes after github.com/)}*\n\
-*- Issue Number: %^{Issue/PR number}*\n\
-*- Link: [[https://github.com/%\\2/issues/%\\3]]*\n\n\
-:Created: %<%Y/%m/%e %l:%M %P %Z>\n\n\
-%^{Description}\n"
-         :empty-lines-before 3)
-       )
-)
-
-;; Item States!
-
-(setq org-todo-keywords
-      '((sequence "Not Started(t)"
-                  "Active(a!)"
-                  "Inactive(i@/!)"
-                  "Researching(r!)"
-                  "Blocked(b@/!)"
-                  "Waiting(w@/!)"
-                  "Warning(e@/!)"
-                  "|"
-                  "Complete(c!)"
-                  "Backlogged(l@/!)"
-                  "Discarded(d@/!)"
-       ))
-)
-
-;; Colors!
-
-(setq org-todo-keyword-faces
-      '(
-        ("Not Started" . (:foreground "#00CDCD" :weight bold))
-        ("Active"      . (:foreground "#3BD1B7" :weight bold))
-        ("Inactive"    . (:foreground "#005EB8" :weight bold))
-        ("Researching" . (:foreground "#FB7306" :weight bold))
-        ("Blocked"     . (:foreground "#A348C8" :weight bold))
-        ("Waiting"     . (:foreground "#C8A347" :weight bold))
-        ("Warning"     . (:foreground "#FF1100" :weight bold))
-        ("Complete"    . (:foreground "#19D22A" :weight bold))
-        ("Backlogged"  . (:foreground "#919191" :weight bold))
-        ("Discarded"   . (:foreground "#D65073" :weight bold))
-       )
-)
-
-;; Setting priorities to be with numbers.
-
-(setq org-highest-priority 0)
-(setq org-lowest-priority 3)
-(setq org-default-priority 2)
