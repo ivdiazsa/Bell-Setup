@@ -5,6 +5,8 @@
 (package-initialize)
 
 (require 'package)
+(require 'ibuf-ext)
+(require 'multiple-cursors)
 
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
@@ -77,8 +79,6 @@
 (global-set-key (kbd "C-<f7>") (lambda () (interactive) (toggle-line-numbers-type)))
 (global-set-key (kbd "M-n") 'display-line-numbers-mode)
 (global-set-key (kbd "C-x C-M-b") 'ibuffer)
-
-;; Add check to only make it available when dot-mode is enabled.
 (global-set-key (kbd "C->") 'dot-mode-execute)
 
 ;; Text modifying and navigation keyboard shortcuts
@@ -109,6 +109,30 @@
 (global-set-key (kbd "C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "C-<right>") 'enlarge-window-horizontally)
 
+;; Configured keybindings for multiple cursors mode.
+
+(define-key mc/keymap (kbd "<return>") nil)
+
+(global-set-key (kbd "C-S-c C-S-n") 'mc/edit-lines)
+(global-set-key (kbd "C-S-j") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-S-k") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+
+;; Keywords not highlighted by default but I believe should be.
+
+(font-lock-add-keywords 'emacs-lisp-mode
+                        '(("add-hook"             . font-lock-keyword-face)
+                          ("add-to-list"          . font-lock-keyword-face)
+                          ("custom-set-faces"     . font-lock-keyword-face)
+                          ("custom-set-variables" . font-lock-keyword-face)
+                          ("define-key"           . font-lock-keyword-face)
+                          ("global-set-key"       . font-lock-keyword-face)
+                          ("global-unset-key"     . font-lock-keyword-face)
+                          ("kbd"                  . font-lock-keyword-face)
+                          ("load-file"            . font-lock-keyword-face)
+                          ("nil"                  . font-lock-keyword-face)
+                          ("put"                  . font-lock-keyword-face)))
+
 ;; It's really annoying to have Emacs GUI minimized with an accidental typo :(
 
 (when (display-graphic-p)
@@ -130,6 +154,7 @@
                ("Bash"      (mode . sh-mode))
                ("C#"        (mode . csharp-mode))
                ("C++"       (mode . c++-mode))
+               ("CMake"     (mode . cmake-mode))
                ("MSBuild"   (or
                              (name . "\\.??proj")
                              (name . "\\.props")
@@ -142,7 +167,7 @@
                ("Magit"     (name . "magit*"))
                ("Emacs"     (or
                              (name . "^\\*scratch\\*$")
-                             (name . "^\\*grep\\*$")
+                             (mode . grep-mode)
                              (name . "^\\*Backtrace\\*$")
                              (name . "^\\*Completions\\*$")
                              (name . "^\\*Find\\*$")
@@ -156,10 +181,30 @@
           (lambda ()
             (ibuffer-switch-to-saved-filter-groups "default")))
 
-
 ;; However, I prefer to only see the categories that have buffers open.
 
 (setq-default ibuffer-show-empty-filter-groups nil)
+
+;; I also prefer to have the human-readable notations for buffer sizes, rather than
+;; all bytes-only.
+
+(define-ibuffer-column size-h
+  (:name "Size" :inline t)
+  (cond
+   ((> (buffer-size) 1000000) (format "%7.2fMB" (/ (buffer-size) 1000000.0)))
+   ((> (buffer-size) 1000)    (format "%7.2fKB" (/ (buffer-size) 1000.0)))
+   (t (format "%8d" (buffer-size)))))
+
+(setq ibuffer-formats
+      '((mark modified read-only
+              " "
+              (name 20 20 :left :elide)
+              " "
+              (size-h 10 -1 :right)
+              " "
+              (mode 16 16 :left :elide)
+              " "
+              filename-and-process)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
