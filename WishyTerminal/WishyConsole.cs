@@ -3,14 +3,17 @@ using System.Text;
 
 using WishyExtensions;
 
-internal static class WishyConsole
+internal static partial class WishyConsole
 {
     private static ConsoleKeyInfo _input;
     private static StringBuilder _commandSb = new StringBuilder();
 
+    // Cursor position relative to the typing area (i.e. not counting the prompt text).
+    private static int _cursorPosition = 0;
+
     // GENERAL TODO: Handle prompts with line breaks and/or multiple lines properly,
     // especially when handling the Backspace, and deleting characters in general.
-    internal static string Prompt = string.Empty;
+    private static string _prompt = string.Empty;
 
     // Void Init():
     //
@@ -20,18 +23,8 @@ internal static class WishyConsole
 
     public static void Init()
     {
-        Prompt = $"\n[ CWD: {System.IO.Directory.GetCurrentDirectory()} ]::> ";
+        _prompt = $"\n[ CWD: {System.IO.Directory.GetCurrentDirectory()} ]::> ";
         return ;
-    }
-
-    // Void UpdatePrompt():
-    //
-    // Commands like "Cd" can make the prompt need to be changed, so this function
-    // will be in charge of that.
-
-    public static void UpdatePrompt()
-    {
-        Prompt = $"\n[ CWD: {System.IO.Directory.GetCurrentDirectory()} ]::> ";
     }
 
     // String ReadCommand():
@@ -44,7 +37,9 @@ internal static class WishyConsole
     {
         // Clean the string builder from the previous command.
         _commandSb.Clear();
-        Console.Write(Prompt);
+        _cursorPosition = 0;
+
+        Console.Write(_prompt);
 
         do
         {
@@ -59,17 +54,21 @@ internal static class WishyConsole
                 case ConsoleKey.Enter:
                     break;
 
-                // The Backspace key visibly only deletes the last input character.
-                // However, I'm learning the hard way it takes much more processing
-                // than I initially thought.
                 case ConsoleKey.Backspace:
-                    HandleBackspace(_commandSb);
+                    HandleBackspace();
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.RightArrow:
+                    HandleSideArrows(_input.Key);
                     break;
 
                 // Any "normal" character, we assume is part of the command
-                // currently being typed.
+                // currently being typed. We use Insert() instead of Append(),
+                // since the cursor can be at different places, not just at
+                // the end.
                 default:
-                    _commandSb.Append(_input.KeyChar);
+                    HandleCharacter(_input.KeyChar);
                     break;
             }
         }
@@ -79,40 +78,63 @@ internal static class WishyConsole
         return _commandSb.ToString();
     }
 
+    // Void HandleCharacter():
+    //
+    // Add the given character to our currently received text at the current position
+    // of the cursor.
+    //
+    // FIXME: If the cursor is anywhere but at the end of the line,
+    //        the text will not be rendered correctly. It is captured
+    //        correctly, however.
+
+    private static void HandleCharacter(ConsoleKey charKey)
+    {
+        _commandSb.Insert(_cursorPosition, charKey);
+        _cursorPosition++;
+    }
+
     // Void HandleBackspace():
     //
     // TODO: Add method doc.
-    // TODO: Add check to avoid going into a negative index in the command
-    // string builder.
+    //
+    // FIXME: Backspace currently will always delete the last character in the
+    //        command StringBuilder, rather than the one where the cursor is.
 
-    private static void HandleBackspace(StringBuilder cmdSb)
+    private static void HandleBackspace()
     {
-        // Delete the last input character from the command's StringBuilder instance.
-        cmdSb.DeleteLast();
+        // Delete the last input character from the command's StringBuilder instance,
+        // if any. Otherwise, just return and await next command.
+        if (_commandSb.Length <= 0)
+            return ;
 
-        // Now, here is the complicated stuff. We have to redraw the last line
-        // of the console, but without the removed character this time.
+        _commandSb.DeleteLast();
+        _cursorPosition--;
 
-        // Clear the line entirely. Use the carriage return and fill it with blanks
-        // up to the number of characters previously written.
-        Console.Write("\r{0}", new string(' ', Prompt.TrimStart().Length + cmdSb.Length + 1));
-
-        // Use the carriage return to write over the newly blanked line. Write the
-        // prompt, and the text with the last character removed.
-        Console.Write("\r{0}{1}", Prompt.TrimStart(), cmdSb.ToString());
+        RenderPrompt();
     }
 
-    // Void AlternateHandleBackspace():
+    // Void HandleSideArrows():
     //
-    // Here's another implementation with Console.SetCursorPosition().
+    // Handler for the left and right arrows. We have to move the cursor accordingly,
+    // while making sure to stay within the bounds of the typing area.
+    //
+    // FIXME: Add check to ensure we're actually receiving a side arrow. Technically,
+    //        it's impossible for that to not happen, but we can never be too safe.
 
-    private static void AlternateHandleBackspace(StringBuilder cmdSb)
+    private static void HandleSideArrows(ConsoleKey arrowKey)
     {
-        cmdSb.DeleteLast();
+        // Left Arrow means go back one character, and Right Arrow means go forward
+        // one character.
+        int motion = arrowKey == ConsoleKey.RightArrow ? 1 : -1;
+        int targetPosition = _cursorPosition + motion;
 
-        Console.SetCursorPosition(0, Console.CursorTop);
-        Console.Write(new string(' ', Prompt.Length + cmdSb.Length + 1));
-        Console.SetCursorPosition(0, Console.CursorTop);
-        Console.Write("{0}{1}", Prompt.TrimStart(), cmdSb.ToString());
+        // If we would end up outside the typing area, then we simply don't
+        // do anything.
+        if (targetPosition >= 0 && targetPosition <= _commandSb.Length)
+        {
+            Console.SetCursorPosition(Console.CursorLeft + motion,
+                                      Console.CursorTop);
+            _cursorPosition = targetPosition;
+        }
     }
 }
