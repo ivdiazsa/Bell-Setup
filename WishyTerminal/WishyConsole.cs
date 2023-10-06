@@ -1,7 +1,9 @@
+// ******************************************************************* //
+//                             Wishy Console!                          //
+// ******************************************************************* //
+
 using System;
 using System.Text;
-
-using WishyExtensions;
 
 internal static partial class WishyConsole
 {
@@ -11,8 +13,12 @@ internal static partial class WishyConsole
     // Cursor position relative to the typing area (i.e. not counting the prompt text).
     private static int _cursorPosition = 0;
 
-    // GENERAL TODO: Handle prompts with line breaks and/or multiple lines properly,
-    // especially when handling the Backspace, and deleting characters in general.
+    // FEATURE FOR LATER: Handle complex prompts appropriately when redrawing the
+    // current line. Currently, if a prompt will have newlines, they must be at the
+    // very beginning of the prompt. Otherwise, the terminal will glitch out when
+    // using Backspace and/or typing characters anywhere but the current end of the
+    // text area.
+
     private static string _prompt = string.Empty;
 
     // Void Init():
@@ -64,9 +70,7 @@ internal static partial class WishyConsole
                     break;
 
                 // Any "normal" character, we assume is part of the command
-                // currently being typed. We use Insert() instead of Append(),
-                // since the cursor can be at different places, not just at
-                // the end.
+                // currently being typed.
                 default:
                     HandleCharacter(_input.KeyChar);
                     break;
@@ -82,35 +86,51 @@ internal static partial class WishyConsole
     //
     // Add the given character to our currently received text at the current position
     // of the cursor.
-    //
-    // FIXME: If the cursor is anywhere but at the end of the line,
-    //        the text will not be rendered correctly. It is captured
-    //        correctly, however.
 
-    private static void HandleCharacter(ConsoleKey charKey)
+    private static void HandleCharacter(char charKeyVal)
     {
-        _commandSb.Insert(_cursorPosition, charKey);
+        _commandSb.Insert(_cursorPosition, charKeyVal);
         _cursorPosition++;
+
+        // If we typed somewhere in the middle of the already existing text, we
+        // have to render the line again, or it will be missing characters.
+        if (_cursorPosition < _commandSb.Length)
+        {
+            int currentConsoleCursorPos = Console.CursorLeft;
+            RenderPrompt();
+            Console.SetCursorPosition(currentConsoleCursorPos, Console.CursorTop);
+        }
     }
 
     // Void HandleBackspace():
     //
-    // TODO: Add method doc.
-    //
-    // FIXME: Backspace currently will always delete the last character in the
-    //        command StringBuilder, rather than the one where the cursor is.
+    // Delete the character behind the cursor. Also, redraw and adjust the cursor's
+    // position as needed.
 
     private static void HandleBackspace()
     {
-        // Delete the last input character from the command's StringBuilder instance,
-        // if any. Otherwise, just return and await next command.
-        if (_commandSb.Length <= 0)
+        // If we haven't typed anything, or are at the very beginning of the typing
+        // area, then there's nothing to delete, so we just return.
+        if (_cursorPosition <= 0)
             return ;
 
-        _commandSb.DeleteLast();
+        // Backspace deletes the character behind the cursor, hence we are calling
+        // here Remove() with a -1 value.
+        _commandSb.Remove(_cursorPosition - 1, 1);
         _cursorPosition--;
 
+        // If we deleted the last character, then the cursor is already where it
+        // ought to be. If we deleted in the middle, we have to make further
+        // adjustments, like in HandleCharacter().
+        if (_cursorPosition == _commandSb.Length)
+        {
+            RenderPrompt();
+            return ;
+        }
+        
+        int currentConsoleCursorPos = Console.CursorLeft;
         RenderPrompt();
+        Console.SetCursorPosition(currentConsoleCursorPos - 1, Console.CursorTop);
     }
 
     // Void HandleSideArrows():
@@ -118,8 +138,9 @@ internal static partial class WishyConsole
     // Handler for the left and right arrows. We have to move the cursor accordingly,
     // while making sure to stay within the bounds of the typing area.
     //
-    // FIXME: Add check to ensure we're actually receiving a side arrow. Technically,
-    //        it's impossible for that to not happen, but we can never be too safe.
+    // ENHANCEME: Add check to ensure we're actually receiving a side arrow.
+    //            Technically, it's impossible for that to not happen, but we
+    //            can never be too safe.
 
     private static void HandleSideArrows(ConsoleKey arrowKey)
     {
