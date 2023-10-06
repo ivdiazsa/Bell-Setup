@@ -1,0 +1,2 @@
+;;; Generated package description from tool-bar+-0/tool-bar+.el  -*- no-byte-compile: t -*-
+(define-package "tool-bar+" "0" "Extensions to standard library tool-bar.el" 'nil :authors '(("Drew Adams")) :maintainer '(nil . "Drew Adams (concat \"drew.adams\" \"@\" \"oracle\" \".com\")") :keywords '("tool-bar" "convenience" "mouse" "button" "frame") :url "https://www.emacswiki.org/emacs/download/tool-bar%2b.el")

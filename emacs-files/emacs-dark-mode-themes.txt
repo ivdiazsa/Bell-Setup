@@ -72,7 +72,7 @@ D doom-miramare
 ? doom-monokai-ristretto
 ! doom-monokai-spectrum
 D doom-moonlight (Despite being a dim theme, the color contrast and palette is amazing)
-* doom-nord
+B doom-nord
 * doom-nord-aurora
 B doom-nova
 * doom-oceanic-next
@@ -106,7 +106,7 @@ B gnome
 B gnome2
 H goldenrod (Very gold and yellow)
 B gray30
-H gruber-darker
+? gruber-darker (It's another pleasant but very yellow and green theme)
 D gruvbox
 ? gruvbox-dark-hard
 D gruvbox-dark-medium
@@ -150,7 +150,7 @@ B resolve
 H retro-green (Single green palette)
 H retro-orange (Single orange palette)
 - robin-hood (This one seems like just a background)
-- ryerson
+B ryerson (It's a combination of Emacs classic dark theme with Windows blue background)
 B salmon-font-lock (This one seems like just font colors)
 D sanityinc-solarized-dark
 * sanityinc-tomorrow-blue

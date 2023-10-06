@@ -165,14 +165,17 @@
                ("Terminals" (mode . term-mode))
                ("Dired"     (mode . dired-mode))
                ("Magit"     (name . "magit*"))
+               ("TAGS"      (or
+                             (mode . tags-table-mode)
+                             (name . "^\\*Tags List\\*$")))
                ("Emacs"     (or
-                             (name . "^\\*scratch\\*$")
+                             (mode . Buffer-menu-mode)
                              (mode . grep-mode)
+                             (mode . help-mode)
+                             (name . "^\\*scratch\\*$")
                              (name . "^\\*Backtrace\\*$")
                              (name . "^\\*Completions\\*$")
-                             (name . "^\\*Find\\*$")
                              (name . "^\\*GNU Emacs\\*$")
-                             (name . "^\\*Help\\*$")
                              (name . "^\\*Messages\\*$")
                              (name . "^\\*Packages\\*$")
                              (name . "^\\*Warnings\\*$")))))))
@@ -216,12 +219,14 @@
  '(ansi-color-names-vector
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
  '(column-number-mode t)
+ '(cursor-type 'box)
  '(custom-enabled-themes '(deeper-blue))
  '(display-time-mode t)
  '(menu-bar-mode nil)
 
  '(package-selected-packages
-   '(dot-mode
+   '(tool-bar+
+     dot-mode
      multiple-cursors
      csharp-mode
      julia-mode
@@ -297,3 +302,4 @@
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
