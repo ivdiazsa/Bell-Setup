@@ -1,0 +1,17 @@
+This file contains a small list with all the features I currently have in Emacs,
+that Vim doesn't have.
+
+Missing Features:
+
+- Multiple Cursors on Separate Lines
+- Open Files/Buffers Manager (Emacs has IBuffer)
+- Narrow View to a Specific Region in a File
+- A Git Version Control System* (Emacs Has Magit)
+- A Decent File Browser (Emacs has Dired)
+- A Decent Code Browser (Emacs has Etags and Xref)
+- Some Emacs Themes are too good to not have in Vim
+- A Good Integrated Terminal (Emacs has Term)
+
+* Vim currently has FuGitive, but it feels odd and like missing something when
+  compared to Emacs' Magit.
+
