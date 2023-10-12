@@ -43,6 +43,7 @@
               '("" "%b%* (%f) %p/%P - GNU Emacs " emacs-version " at " system-name))
 (setq-default auth-sources '("~/.authinfo.gpg"))
 (setq-default ediff-forward-word-function 'forward-char)
+(setq-default delete-selection-mode t)
 
 ;; Function to easily toggle between absolute/normal and relative line numbering.
 
@@ -86,9 +87,11 @@
 (global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-F") 'next-word-start)
 (global-set-key (kbd "M-D") 'delete-to-word-start)
-(global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
 (global-set-key (kbd "C-x E") 'erase-buffer)
 (global-set-key (kbd "C-x t h") 'sgml-tag)
+(global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
+(global-set-key (kbd "M-s M-r") 'narrow-to-region)
+(global-set-key (kbd "M-s M-e") 'widen)
 
 ;; Frame manipulation keyboard shortcuts
 
@@ -100,7 +103,8 @@
 ;; Magit keyboard shortcuts.
 
 (global-set-key (kbd "C-x C-k k") 'magit-kill-this-buffer)
-(global-set-key (kbd "C-x M-b") 'magit-blame)
+(global-set-key (kbd "C-x M-a") 'magit-blame-addition)
+(global-set-key (kbd "C-x M-r") 'magit-blame-removal)
 
 ;; Keybindings for easy split windows resizing.
 
