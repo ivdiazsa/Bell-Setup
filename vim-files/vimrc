@@ -202,3 +202,12 @@ let g:org_todo_keyword_faces =
 \  ['Discarded',   [':foreground #D65073', ':weight bold']],
 \]
 
+" **********************************************************************
+" Plugins Configuration - Buffer Tree Explorer!
+" **********************************************************************
+
+:map <C-M-b> :Tree <Enter>
+
+let g:buffer_tree_explorer_compress = 1
+let g:buffertree_close_on_enter = 1
+

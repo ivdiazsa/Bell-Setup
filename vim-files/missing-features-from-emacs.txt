@@ -4,7 +4,6 @@ that Vim doesn't have.
 Missing Features:
 
 - Multiple Cursors on Separate Lines
-- Open Files/Buffers Manager (Emacs has IBuffer)
 - Narrow View to a Specific Region in a File
 - A Git Version Control System* (Emacs Has Magit)
 - A Decent File Browser (Emacs has Dired)
@@ -15,3 +14,6 @@ Missing Features:
 * Vim currently has FuGitive, but it feels odd and like missing something when
   compared to Emacs' Magit.
 
+Complete:
+
+- Open Files/Buffers Manager (Got Buffer Tree Explorer for Vim)
