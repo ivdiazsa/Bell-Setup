@@ -9,7 +9,8 @@ Missing Features:
 *** A Decent File Browser (Emacs has Dired)
   - A Decent Code Browser (Emacs has Etags and Xref)
   - Some Emacs Themes are too good to not have in Vim
-  - A Good Integrated Terminal (Emacs has Term)
+ && A Good Integrated Terminal (Emacs has Term)
+  & Multiple Frames/Windows with the same files open (Emacs has this natively)
 
 * Vim currently has FuGitive, but it feels odd and like missing something when
   compared to Emacs' Magit.
@@ -24,6 +25,10 @@ Missing Features:
     For Neovim, however, there is nvim-tree.lua, which is actively maintained and
     is like some sort of combination between Treemacs and Dired in Emacs. This one
     might be the one that will push me to move to Neovim :/
+
+& Seems like Vim/Neovim are really against this concept :/
+
+&& We might have to deal with Vim's terminal. Hoping Neovim's is less buggy.
 
 Complete:
 
