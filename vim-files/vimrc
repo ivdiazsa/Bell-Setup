@@ -40,7 +40,7 @@ set cursorlineopt=number
 
 " Configure GVim settings here.
 if has('gui_running')
-    set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Regular\ 9.5
+    set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Regular\ 14
     set guioptions-=T
     set guioptions-=r
     set guioptions-=m
@@ -86,7 +86,11 @@ let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 15
 let g:netrw_preview = 1
-let g:netrw_altv = &sn
+
+" Neovim dropped support for this option.
+if !has('nvim')
+  let g:netrw_altv = &sn
+endif
 
 " Certain file extensions share their syntax highlighting and properties with
 " other ones:
