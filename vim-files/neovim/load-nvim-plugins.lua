@@ -1,11 +1,15 @@
--- disable netrw at the very start of your init.lua
+-- ***************************
+-- * Nvim Tree Configuration!
+-- ***************************
+
+-- Disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- set termguicolors to enable highlight groups
+-- Set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
 
--- empty setup using defaults
+-- Empty setup using defaults
 require("nvim-tree").setup()
 
 -- OR setup with some options
@@ -21,3 +25,9 @@ require("nvim-tree").setup()
 --     dotfiles = true,
 --   },
 -- })
+
+-- ***************************
+-- * Neogit Configuration!
+-- ***************************
+require("neogit").setup()
+

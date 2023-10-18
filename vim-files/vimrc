@@ -53,6 +53,9 @@ endif
 set splitright
 set splitbelow
 
+" By default, Vim does not match angular brackets, but I use them fairly frequently.
+set matchpairs+=<:>
+
 " Configure syntax highlighting themes here.
 if has('gui_running')
     colorscheme luna

@@ -3,24 +3,14 @@ that Vim doesn't have.
 
 Missing Features:
 
- ** Multiple Cursors on Separate Lines
-  * A Git Version Control System (Emacs Has Magit)
   $ A Decent Code Browser (Emacs has Etags and Xref)
   - Some Emacs Themes are too good to not have in Vim
- && A Good Integrated Terminal (Emacs has Term)
   & Multiple Frames/Windows with the same files open (Emacs has this natively)
 
 * Vim currently has FuGitive, but it feels odd and like missing something when
   compared to Emacs' Magit. Might end up trying out Neogit for Neovim instead...
 
-** This one is pending because I found two good ones... but with a caveat:
-    * One is for Vim, and the other is for Neovim.
-    * The Vim one is not much maintained anymore but it fits both.
-    * The Neovim one is actively maintained but it only fits Neovim.
-
 & Seems like Vim/Neovim are really against this concept :/
-
-&& We might have to deal with Vim's terminal. Hoping Neovim's is less buggy.
 
 $ Going to try CTags and Vim's native support.
 
@@ -31,4 +21,7 @@ Complete:
 - Open Files/Buffers Manager (Got Buffer Tree Explorer for Vim)
 - Narrow View to a Specific Region in a File (Got NrrwRgn for Vim)
 - A Decent File Browser (Got Nvim-Tree for Neovim)
+- Multiple Cursors on Separate Lines (Got Vim-Visual-Multi for Vim)
+- A Git Version Control System (Got Neogit for Neovim but need to configure the diff tool)
+- A Good Integrated Terminal (Neovim's Terminal seems to be stable enough)
 
