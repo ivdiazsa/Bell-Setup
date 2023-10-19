@@ -4,6 +4,7 @@ using System.IO;
 internal static class WishyShell
 {
     private const int SHELL_COMMAND_SUCCESS = 0;
+    private const int SHELL_COMMAND_FAILURE = -1;
 
     // Int ExecuteCommand():
     //
@@ -54,11 +55,18 @@ internal static class WishyShell
 
     private static int Cd(string targetDir)
     {
-        // TODO: Handle the case where the target directory does not exist.
-        // TODO: Handle the empty case by making it cd to the user's home directory.
-        Directory.SetCurrentDirectory(targetDir);
+        // The empty 'cd' command will behave like Unix: Change to the user's
+        // home directory.
+        if (string.IsNullOrWhiteSpace(targetDir))
+            targetDir = Environment.GetEnvironmentVariable("HOME");
 
-        // This will get more complex as we add prompt customization functionalities.
+        if (!Directory.Exists(targetDir))
+        {
+            Console.WriteLine($"The specified directory '{targetDir}' does not exist.");
+            return SHELL_COMMAND_FAILURE;
+        }
+
+        Directory.SetCurrentDirectory(targetDir);
         WishyConsole.UpdatePrompt();
 
         return SHELL_COMMAND_SUCCESS;
