@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 internal static class WishyShell
@@ -33,6 +34,17 @@ internal static class WishyShell
             case "cd":
                 string target = args.Length > 0 ? args[0] : string.Empty;
                 exitCode = Cd(target);
+                break;
+
+            case "ls":
+                exitCode = Ls(args);
+                break;
+
+            // If the given command does not match any of the Wishy Shell's ones,
+            // or any in the PATH, then we'll assume it's attempting to call an
+            // external program and try to run it.
+            default:
+                Console.WriteLine("DEV-ONLY: Here goes running an external program :)");
                 break;
         }
 
@@ -71,4 +83,33 @@ internal static class WishyShell
 
         return SHELL_COMMAND_SUCCESS;
     }
+
+    // Command     : ls
+    // Parameters  : Target directory to list the contents of.
+    // Description : Print the contents (files and folders) of the specified directory.
+
+    private static int Ls(string[] lsArgs)
+    {
+        // TODO:
+        // - Main 'ls' Functionality :)
+        // - Handle current directory case.
+        // - Handle nonexisting directories.
+        // - Handle flags:
+        //   * Let's begin with the '-l' flag.
+
+        // Just remembered that target and flags can come in any order. This will
+        // certainly be interesting to implement.
+
+        string lsTarget = string.Empty;
+        List<string> argsAndFlags = new List<string>();
+
+        // The 'ls' command by itself assumes the user wants to list the contents
+        // of the current working directory, just like in most shells.
+
+        if (lsArgs.Length < 1)
+            lsTarget = Directory.GetCurrentDirectory();
+
+        return SHELL_COMMAND_SUCCESS;
+    }
 }
+
