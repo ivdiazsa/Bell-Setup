@@ -71,6 +71,7 @@ endif
 
 " Shortcuts for commands I use often.
 :map <M-z> :set wrap! <Enter>
+:noremap <M-n> :set number! <Enter>
 :noremap <Leader><F7> :set relativenumber! <Enter>
 :map <M-o> :copen <Enter>
 :map <M-c> :cclose <Enter>
@@ -84,15 +85,14 @@ let g:terminal_ansi_colors = [
     \'#2E3436', '#CC0000', '#4E9A06', '#C4A000', '#3465A4', '#75507B', '#06989A', '#D3D7CF' ]
 
 " Configure Netrw to be even more useful :)
-:map <F4> :Vexplore <Enter>
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_winsize = 15
-let g:netrw_preview = 1
-
-" Neovim dropped support for this option.
+" This is Vim-exclusive since in Neovim we're using Nvim-Tree.
 if !has('nvim')
-  let g:netrw_altv = &sn
+    :map <F4> :Vexplore <Enter>
+    let g:netrw_liststyle = 3
+    let g:netrw_browse_split = 4
+    let g:netrw_winsize = 15
+    let g:netrw_preview = 1
+    let g:netrw_altv = &sn
 endif
 
 " Certain file extensions share their syntax highlighting and properties with
