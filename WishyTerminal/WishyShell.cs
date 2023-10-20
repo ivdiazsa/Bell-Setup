@@ -1,11 +1,15 @@
+// ******************************************************************* //
+//                              Wishy Shell!                           //
+// ******************************************************************* //
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 internal static class WishyShell
 {
-    private const int SHELL_COMMAND_SUCCESS = 0;
-    private const int SHELL_COMMAND_FAILURE = -1;
+    internal const int SHELL_COMMAND_SUCCESS = 0;
+    internal const int SHELL_COMMAND_FAILURE = -1;
 
     // Int ExecuteCommand():
     //
@@ -97,16 +101,38 @@ internal static class WishyShell
         // - Handle flags:
         //   * Let's begin with the '-l' flag.
 
-        // Just remembered that target and flags can come in any order. This will
-        // certainly be interesting to implement.
+        // The 'ls' command can receive one or more target files or directories
+        // to display, hence we're using a list to store them.
 
-        string lsTarget = string.Empty;
+        List<string> lsTargets = new List<string>();
         List<string> argsAndFlags = new List<string>();
 
-        // The 'ls' command by itself assumes the user wants to list the contents
-        // of the current working directory, just like in most shells.
+        foreach (string arg in lsArgs)
+        {
+            // Not starting with '-' or '--' means it's a potential target.
+            if (!arg.StartsWith('-'))
+            {
+                lsTargets.Add(arg);
+                continue;
+            }
 
-        if (lsArgs.Length < 1)
+            if (arg.Length == 1
+            || (arg.Length == 2 && arg[1] == '-')
+            || (arg.Length > 2 && arg[2] == '-'))
+            {
+                Console.WriteLine($"Invalid ls flag '{arg}'");
+                return SHELL_COMMAND_FAILURE;
+            }
+
+            arg = arg.TrimStart('-');
+        }
+
+        // If at this point, the target is still empty, then that means we did
+        // not receive the directory to list the contents of. In this case, we
+        // shall display the contents of the current working directory, as most
+        // shells out there do.
+
+        if (string.IsNullOrWhiteSpace(lsTarget))
             lsTarget = Directory.GetCurrentDirectory();
 
         return SHELL_COMMAND_SUCCESS;
