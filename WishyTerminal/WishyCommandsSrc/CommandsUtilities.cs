@@ -9,23 +9,25 @@
 
 // TODO: Implement DescribeFlags() method.
 
-internal readonly struct CmdFlagInfo
+internal class CmdFlagInfo
 {
-    public CmdFlagInfo(string oneDash, string twoDashes, string desc)
-    {
-        ShortVersion = oneDash;
-        LongVersion = twoDashes;
-        Description = desc;
-    }
+    public readonly string ShortVersion { get; init; }
+    public readonly string LongVersion { get; init; }
+    public readonly string Description { get; init; }
 
-    string ShortVersion { get; init; }
-    string LongVersion { get; init; }
-    string Description { get; init; }
+    // There are no commands that accept a single '-' alone or flags starting
+    // with more than 2 dashes.
+    public static bool IsValidFlag(string flag)
+    {
+        return flag.Length <= 1 || (flag.Length > 2 && flag[2] == '-')
+               ? false
+               : true;
+    }
 }
 
 internal class CmdFlagCollection
 {
-    private readonly CmdFlagInfo[] _flagsList { get; init; }
+    private readonly CmdFlagInfo[] _flagsList { get; }
 
     public CmdFlagCollection(CmdFlagInfo[] flagsList)
     {
@@ -38,3 +40,4 @@ internal class CmdFlagCollection
         return ;
     }
 }
+

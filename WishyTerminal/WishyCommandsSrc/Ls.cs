@@ -54,6 +54,14 @@ internal sealed class Ls
                 targets.Add(arg);
                 continue;
             }
+
+            if (!CmdFlagInfo.IsValidFlag(arg))
+            {
+                Console.WriteLine($"Invalid ls flag '{arg}'");
+                return WishyShell.SHELL_COMMAND_FAILURE;
+            }
+
+            argsAndFlags.Add(arg);
         }
 
         return WishyShell.SHELL_COMMAND_SUCCESS;
