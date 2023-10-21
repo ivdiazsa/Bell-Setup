@@ -89,53 +89,16 @@ internal static class WishyShell
     }
 
     // Command     : ls
-    // Parameters  : Target directory to list the contents of.
+    //
+    // Parameters  : List of arguments that can include the following:
+    //     * Target directory/directories to display the contents of.
+    //     * Flags to modify how the output is displayed, filtered, etc.
+    //
     // Description : Print the contents (files and folders) of the specified directory.
 
     private static int Ls(string[] lsArgs)
     {
-        // TODO:
-        // - Main 'ls' Functionality :)
-        // - Handle current directory case.
-        // - Handle nonexisting directories.
-        // - Handle flags:
-        //   * Let's begin with the '-l' flag.
-
-        // The 'ls' command can receive one or more target files or directories
-        // to display, hence we're using a list to store them.
-
-        List<string> lsTargets = new List<string>();
-        List<string> argsAndFlags = new List<string>();
-
-        foreach (string arg in lsArgs)
-        {
-            // Not starting with '-' or '--' means it's a potential target.
-            if (!arg.StartsWith('-'))
-            {
-                lsTargets.Add(arg);
-                continue;
-            }
-
-            if (arg.Length == 1
-            || (arg.Length == 2 && arg[1] == '-')
-            || (arg.Length > 2 && arg[2] == '-'))
-            {
-                Console.WriteLine($"Invalid ls flag '{arg}'");
-                return SHELL_COMMAND_FAILURE;
-            }
-
-            arg = arg.TrimStart('-');
-        }
-
-        // If at this point, the target is still empty, then that means we did
-        // not receive the directory to list the contents of. In this case, we
-        // shall display the contents of the current working directory, as most
-        // shells out there do.
-
-        if (string.IsNullOrWhiteSpace(lsTarget))
-            lsTarget = Directory.GetCurrentDirectory();
-
-        return SHELL_COMMAND_SUCCESS;
+        return Ls.Instance.ExecuteCommand(lsArgs);
     }
 }
 
