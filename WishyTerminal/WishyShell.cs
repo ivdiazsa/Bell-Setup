@@ -41,10 +41,6 @@ internal static class WishyShell
                 exitCode = _Cd(target);
                 break;
 
-            case "ls":
-                exitCode = _Ls(args);
-                break;
-
             // If the given command does not match any of the Wishy Shell's ones,
             // or any in the PATH, then we'll assume it's attempting to call an
             // external program and try to run it.
@@ -88,19 +84,6 @@ internal static class WishyShell
         WishyConsole.UpdatePrompt();
 
         return SHELL_COMMAND_SUCCESS;
-    }
-
-    // Command     : ls
-    //
-    // Parameters  : List of arguments that can include the following:
-    //     * Target directory/directories to display the contents of.
-    //     * Flags to modify how the output is displayed, filtered, etc.
-    //
-    // Description : Print the contents (files and folders) of the specified directory.
-
-    private static int _Ls(string[] lsArgs)
-    {
-        return Ls.Instance.ExecuteCommand(lsArgs);
     }
 }
 
