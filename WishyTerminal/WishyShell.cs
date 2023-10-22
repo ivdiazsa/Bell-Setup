@@ -32,6 +32,7 @@ internal static class WishyShell
         switch (cmd)
         {
             case "pwd":
+            case "cwd":
                 exitCode = _Pwd();
                 break;
 
