@@ -32,16 +32,16 @@ internal static class WishyShell
         switch (cmd)
         {
             case "pwd":
-                exitCode = Pwd();
+                exitCode = _Pwd();
                 break;
 
             case "cd":
                 string target = args.Length > 0 ? args[0] : string.Empty;
-                exitCode = Cd(target);
+                exitCode = _Cd(target);
                 break;
 
             case "ls":
-                exitCode = Ls(args);
+                exitCode = _Ls(args);
                 break;
 
             // If the given command does not match any of the Wishy Shell's ones,
@@ -59,7 +59,7 @@ internal static class WishyShell
     // Parameters  : None
     // Description : Print the current working directory.
 
-    private static int Pwd()
+    private static int _Pwd()
     {
         Console.WriteLine(Directory.GetCurrentDirectory());
         return SHELL_COMMAND_SUCCESS;
@@ -69,7 +69,7 @@ internal static class WishyShell
     // Parameters  : Target directory to switch to.
     // Description : Change the cwd to the specified one.
 
-    private static int Cd(string targetDir)
+    private static int _Cd(string targetDir)
     {
         // The empty 'cd' command will behave like Unix: Change to the user's
         // home directory.
@@ -96,7 +96,7 @@ internal static class WishyShell
     //
     // Description : Print the contents (files and folders) of the specified directory.
 
-    private static int Ls(string[] lsArgs)
+    private static int _Ls(string[] lsArgs)
     {
         return Ls.Instance.ExecuteCommand(lsArgs);
     }

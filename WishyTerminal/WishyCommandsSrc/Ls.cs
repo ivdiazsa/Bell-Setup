@@ -27,7 +27,7 @@ internal sealed class Ls
             new CmdFlagInfo("-h", "--help", "Display the command's usage and exit."),
             new CmdFlagInfo("-l", "--long", "Display items in long format."),
             new CmdFlagInfo("-r", "--recursive", "List contents from all subdirectories"
-                                                 + " as well.")
+                                               + " as well.")
         }
     );
 
@@ -44,7 +44,7 @@ internal sealed class Ls
         // to display, hence we're using a list to store them.
 
         List<string> targets = new List<string>();
-        List<string> argsAndFlags = new List<string>();
+        List<string> flags = new List<string>();
 
         foreach (string arg in args)
         {
@@ -55,15 +55,17 @@ internal sealed class Ls
                 continue;
             }
 
-            if (!CmdFlagInfo.IsValidFlag(arg))
+            if (!CmdFlagInfo.IsValidFlag(arg) || !_lsFlags.IsFlagDefined(arg))
             {
                 Console.WriteLine($"Invalid ls flag '{arg}'");
                 return WishyShell.SHELL_COMMAND_FAILURE;
             }
 
-            argsAndFlags.Add(arg);
+            flags.Add(arg);
         }
 
+        Console.WriteLine($"You passed the following targets: {string.Join(',', targets)}");
+        Console.WriteLine($"You passed the following flags: {string.Join(',', flags)}");
         return WishyShell.SHELL_COMMAND_SUCCESS;
     }
 }

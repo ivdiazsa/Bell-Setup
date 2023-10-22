@@ -11,9 +11,21 @@
 
 internal class CmdFlagInfo
 {
-    public readonly string ShortVersion { get; init; }
-    public readonly string LongVersion { get; init; }
-    public readonly string Description { get; init; }
+    public string ShortVersion { get; init; }
+    public string LongVersion { get; init; }
+    public string Description { get; init; }
+
+    public CmdFlagInfo(string oneDash, string twoDashes, string desc)
+    {
+        ShortVersion = oneDash;
+        LongVersion = twoDashes;
+        Description = desc;
+    }
+
+    public bool MatchesFlag(string flag)
+    {
+        return (flag == ShortVersion || flag == LongVersion);
+    }
 
     // There are no commands that accept a single '-' alone or flags starting
     // with more than 2 dashes.
@@ -27,17 +39,27 @@ internal class CmdFlagInfo
 
 internal class CmdFlagCollection
 {
-    private readonly CmdFlagInfo[] _flagsList { get; }
+    private CmdFlagInfo[] _flagsList { get; }
 
     public CmdFlagCollection(CmdFlagInfo[] flagsList)
     {
         _flagsList = flagsList;
     }
 
-    internal void DescribeFlags()
+    public bool IsFlagDefined(string flag)
     {
-        Console.WriteLine("DescribeFlags() is under construction!");
-        return ;
+        foreach (CmdFlagInfo fi in _flagsList)
+        {
+            if (fi.MatchesFlag(flag))
+                return true;
+        }
+        return false;
     }
+
+    // public override string ToString()
+    // {
+    //     Console.WriteLine("DescribeFlags() is under construction!");
+    //     return ;
+    // }
 }
 
