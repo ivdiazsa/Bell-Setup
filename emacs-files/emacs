@@ -137,6 +137,9 @@
                           ("nil"                  . font-lock-keyword-face)
                           ("put"                  . font-lock-keyword-face)))
 
+(font-lock-add-keywords 'csharp-mode
+                        '(("init" . font-lock-keyword-face)))
+
 ;; It's really annoying to have Emacs GUI minimized with an accidental typo :(
 
 (when (display-graphic-p)
@@ -207,7 +210,7 @@
               " "
               (name 20 20 :left :elide)
               " "
-              (size-h 10 -1 :right)
+              (size-h 11 -1 :right)
               " "
               (mode 16 16 :left :elide)
               " "
@@ -221,15 +224,16 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
-   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+   ["#282b33" "#e1c1ee" "#5b94ab" "#cfcf9c" "#819cd6" "#a6c1e0" "#7289bc" "#c6c6c6"])
  '(column-number-mode t)
  '(cursor-type 'box)
  '(custom-enabled-themes '(deeper-blue))
  '(display-time-mode t)
- '(menu-bar-mode nil)
+ '(menu-bar-mode t)
 
  '(package-selected-packages
-   '(tool-bar+
+   '(evil
+     tool-bar+
      dot-mode
      multiple-cursors
      csharp-mode
@@ -275,7 +279,7 @@
 
  '(scroll-bar-mode nil)
  '(size-indication-mode t)
- '(tool-bar-mode nil)
+ '(tool-bar-mode t)
  '(warning-suppress-types '((comp) (comp) (comp))))
 
 (custom-set-faces
