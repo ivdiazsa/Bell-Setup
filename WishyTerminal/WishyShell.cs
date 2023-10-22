@@ -24,7 +24,7 @@ internal static class WishyShell
         // for said command. If more stuff is passed to a certain command that it
         // doesn't need, then all that extra stuff is simply not used.
 
-        string[] commandAndArgs = command.Split(' ');
+        string[] commandAndArgs = command.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         string cmd = commandAndArgs[0];
         string[] args = commandAndArgs[1..];
 
@@ -48,6 +48,7 @@ internal static class WishyShell
             // or any in the PATH, then we'll assume it's attempting to call an
             // external program and try to run it.
             default:
+                Console.WriteLine($"DEV-ONLY: {cmd}");
                 Console.WriteLine("DEV-ONLY: Here goes running an external program :)");
                 break;
         }
