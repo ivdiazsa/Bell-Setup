@@ -7,50 +7,48 @@
 // * Long version: Two dashes and a full word or words sometimes.
 // * Description: Sentence concisely explaining that the flag does.
 
-// TODO: Implement DescribeFlags() method.
-
-internal class CmdFlagInfo
+internal class CmdOptionInfo
 {
     public string ShortVersion { get; init; }
     public string LongVersion { get; init; }
     public string Description { get; init; }
 
-    public CmdFlagInfo(string oneDash, string twoDashes, string desc)
+    public CmdOptionInfo(string oneDash, string twoDashes, string desc)
     {
         ShortVersion = oneDash;
         LongVersion = twoDashes;
         Description = desc;
     }
 
-    public bool MatchesFlag(string flag)
+    public bool MatchesOption(string opt)
     {
-        return (flag == ShortVersion || flag == LongVersion);
+        return (opt == ShortVersion || opt == LongVersion);
     }
 
     // There are no commands that accept a single '-' alone or flags starting
     // with more than 2 dashes.
-    public static bool IsValidFlag(string flag)
+    public static bool IsValidOption(string opt)
     {
-        return flag.Length <= 1 || (flag.Length > 2 && flag[2] == '-')
+        return opt.Length <= 1 || (opt.Length > 2 && flag[2] == '-')
                ? false
                : true;
     }
 }
 
-internal class CmdFlagCollection
+internal class CmdOptionCollection
 {
-    private CmdFlagInfo[] _flagsList { get; }
+    private CmdOptionInfo[] _optsList { get; }
 
-    public CmdFlagCollection(CmdFlagInfo[] flagsList)
+    public CmdOptionCollection(CmdOptionInfo[] options)
     {
-        _flagsList = flagsList;
+        _optsList = options;
     }
 
-    public bool IsFlagDefined(string flag)
+    public bool IsOptionDefined(string opt)
     {
-        foreach (CmdFlagInfo fi in _flagsList)
+        foreach (CmdOptionInfo oi in _optsList)
         {
-            if (fi.MatchesFlag(flag))
+            if (oi.MatchesOption(opt))
                 return true;
         }
         return false;

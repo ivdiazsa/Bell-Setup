@@ -41,6 +41,10 @@ internal static class WishyShell
                 exitCode = _Cd(target);
                 break;
 
+            case "rm":
+                exitCode = _Rm(args);
+                break;
+
             // If the given command does not match any of the Wishy Shell's ones,
             // or any in the PATH, then we'll assume it's attempting to call an
             // external program and try to run it.
@@ -84,6 +88,15 @@ internal static class WishyShell
         WishyConsole.UpdatePrompt();
 
         return SHELL_COMMAND_SUCCESS;
+    }
+
+    // Command     : rm
+    // Parameters  : Files and/or directories to delete and flags.
+    // Description : Delete the specified files and/or directories.
+
+    private static int _Rm(string[] rmArgs)
+    {
+        return Rm.Instance.ExecuteCommand(rmArgs);
     }
 }
 
