@@ -56,9 +56,34 @@ internal sealed class Rm
         List<string> options = new List<string>();
 
         CmdUtils.ParseCommandArgs(rmArgs, _rmOptions, options, targetsToDelete);
+
+        if (targetsToDelete.Length == 0)
+        {
+            Console.WriteLine("rm: Missing item(s) to delete.");
+            return WishyShell.SHELL_COMMAND_FAILURE;
+        }
+
         SetConfiguration(options);
 
+        foreach (string item in targetsToDelete)
+        {
+            // If no wildcard and file exists, then delete it normally.
+            // If no wildcard and directory exists, check for the presence of the '-r'
+            // or '--recursive' flag. If not, then fail. If yes, delete it.
+            // If wildcard, get all matching files and directories, and then delete them.
+        }
+
         return WishyShell.SHELL_COMMAND_SUCCESS;
+    }
+
+    private void DeleteDirectory(string dirName)
+    {
+        return ;
+    }
+
+    private void DeleteFile(string fileName)
+    {
+        return ;
     }
 
     // Method that translates the flags and options into a configuration enum format,
