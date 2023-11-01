@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 using WishyExtensions;
 
-internal sealed class Rm
+internal sealed class Rm : CommandTemplate
 {
     // ***************************************************************************
     // Class RmConfiguration:
@@ -98,17 +98,15 @@ internal sealed class Rm
     // Rm Main Class Implementation
     // *****************************
 
-    private string[] _rmArgs;
-
-    public Rm(string[] args) { _rmArgs = args; }
+    public Rm(string[] rmargs) : base(rmArgs) {}
 
     // FIXME: As of now, the '--' flag is accepted but results in undefined behavior.
-    public int ExecuteCommand()
+    public override int ExecuteCommand()
     {
         List<string> targetsToDelete = new List<string>();
         List<string> options = new List<string>();
 
-        CmdUtils.ParseCommandArgs(_rmArgs, RmConfiguration.RmOptions, options, targetsToDelete);
+        CmdUtils.ParseCommandArgs(_args, RmConfiguration.RmOptions, options, targetsToDelete);
 
         if (targetsToDelete.Count == 0)
         {
