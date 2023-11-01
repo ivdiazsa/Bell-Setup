@@ -2,6 +2,8 @@
 //                         Extension Methods!                          //
 // ******************************************************************* //
 
+using System;
+
 namespace WishyExtensions;
 
 public static class MethodExtensions

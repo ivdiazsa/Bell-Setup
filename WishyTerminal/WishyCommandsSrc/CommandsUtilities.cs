@@ -2,6 +2,7 @@
 //                       Other Command Utilities!                      //
 // ******************************************************************* //
 
+using System;
 using System.Collections.Generic;
 
 // *******************************************************************
@@ -34,7 +35,7 @@ internal class CmdOptionInfo
     // with more than 2 dashes.
     public static bool IsValidOption(string opt)
     {
-        return opt.Length <= 1 || (opt.Length > 2 && flag[2] == '-')
+        return opt.Length <= 1 || (opt.Length > 2 && opt[2] == '-')
                ? false
                : true;
     }

@@ -6,10 +6,15 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
+using WishyExtensions;
+
 internal sealed class Rm
 {
+    // ***************************************************************************
+    // Class RmConfiguration:
     // Helper class that contains all constant data related to the 'rm' command,
     // as well as managing the configuration of each specific call made.
+    // ***************************************************************************
 
     private static class RmConfiguration
     {
@@ -23,9 +28,9 @@ internal sealed class Rm
             VERBOSE = 8
         };
 
-        private RmSettings _config = RmSettings.None;
+        private static RmSettings s_config = RmSettings.NONE;
 
-        public readonly CmdOptionCollection RmOptions = new CmdOptionCollection(
+        public static readonly CmdOptionCollection RmOptions = new CmdOptionCollection(
             new[]
             {
                 new CmdOptionInfo("-f", "--force", "Don't fail with nonexistent targets"
@@ -54,22 +59,22 @@ internal sealed class Rm
                 {
                     case "-f":
                     case "--force":
-                        _config |= RmSettings.FORCE;
+                        s_config |= RmSettings.FORCE;
                         break;
 
                     case "-i":
                     case "--interactive":
-                        _config |= RmSettings.INTERACTIVE;
+                        s_config |= RmSettings.INTERACTIVE;
                         break;
 
                     case "-r":
                     case "--recursive":
-                        _config |= RmSettings.RECURSIVE;
+                        s_config |= RmSettings.RECURSIVE;
                         break;
 
                     case "-v":
                     case "--verbose":
-                        _config |= RmSettings.VERBOSE;
+                        s_config |= RmSettings.VERBOSE;
                         break;
 
                     default:
@@ -78,11 +83,20 @@ internal sealed class Rm
             }
         }
 
-        public bool IsForce()       => _config & RmSettings.FORCE;
-        public bool IsInteractive() => _config & RmSettings.INTERACTIVE;
-        public bool IsRecursive()   => _config & RmSettings.RECURSIVE;
-        public bool IsVerbose()     => _config & RmSettings.VERBOSE;
+        public static void ResetConfiguration()
+        {
+            s_config = RmSettings.NONE;
+        }
+
+        public static bool IsForce()       => (s_config & RmSettings.FORCE) != 0;
+        public static bool IsInteractive() => (s_config & RmSettings.INTERACTIVE) != 0;
+        public static bool IsRecursive()   => (s_config & RmSettings.RECURSIVE) != 0;
+        public static bool IsVerbose()     => (s_config & RmSettings.VERBOSE) != 0;
     }
+
+    // *****************************
+    // Rm Main Class Implementation
+    // *****************************
 
     private string[] _rmArgs;
 
@@ -96,7 +110,7 @@ internal sealed class Rm
 
         CmdUtils.ParseCommandArgs(_rmArgs, RmConfiguration.RmOptions, options, targetsToDelete);
 
-        if (targetsToDelete.Length == 0)
+        if (targetsToDelete.Count == 0)
         {
             Console.WriteLine("rm: Missing item(s) to delete.");
             return WishyShell.SHELL_COMMAND_FAILURE;
@@ -147,61 +161,105 @@ internal sealed class Rm
         return WishyShell.SHELL_COMMAND_SUCCESS;
     }
 
-    private void DeleteDirectory(string dirName)
-    {
-        return ;
-    }
-
-    private void DeleteFile(string fileName)
+    private bool RequestItemDeletion(string itemName)
     {
         // We need to get the nod from the user if the interactive flag is set.
         // If we get another answer, then we tell the user to try again answering
         // with only "yes" or "no".
 
-        if (RmConfiguration.IsInteractive())
+        string answer = string.Empty;
+
+        while (true)
         {
-            string confirm = string.Empty;
+            Console.Write($"Do you wish to delete '{itemName}' (yes/no)? ");
+            answer = Console.ReadLine();
 
-            while (true)
-            {
-                Console.Write($"Do you wish to delete '{filename}' (yes/no)? ");
-                confirm = Console.ReadLine();
-
-                if (confirm == "n" || confirm == "no")
-                    return ;
-
-                if (confirm == "y" || confirm == "yes")
-                    break;
-
+            if (answer != "n" && answer != "no" && answer != "y" && answer != "yes")
                 Console.WriteLine("Please answer with y(es) or n(o)!");
-            }
+            else
+                break;
         }
 
-        // Delete the file. We could just catch the generic Exception, but we wanted
-        // to add custom error messages for some potential errors.
+        // We already validated in the loop that answer is "yes" or "no" only.
+        return (answer == "y" || answer == "yes") ? true : false;
+    }
 
-        try { File.Delete(filename) }
-        catch (IOException ioex)
-        {
-            Console.WriteLine($"rm: The OS decided to keep using the file '{filename}',"
-                              + " so it could not be removed.");
+    private void DeleteDirectory(string dirName)
+    {
+        if (RmConfiguration.IsInteractive() && !RequestItemDeletion(dirName))
             return ;
-        }
-        catch (UnauthorizedAccessException uaex)
+
+        // Main algorithm:
+        // * Get all the directory's contents.
+        // * Delete all the files.
+        // * Recursively call itself for subdirectories.
+        // * Delete the starting directory.
+
+        IEnumerable<string> subDirs = Directory.EnumerateDirectories(dirName);
+        IEnumerable<string> files = Directory.EnumerateFiles(dirName);
+
+        foreach (string file in files)
         {
-            Console.WriteLine("rm: Could not remove the file '{filename}' because"
+            DeleteFile(file);
+        }
+
+        foreach (string subDir in subDirs)
+        {
+            DeleteDirectory(subDir);
+        }
+
+        try { Directory.Delete(dirName); }
+        catch (UnauthorizedAccessException)
+        {
+            Console.WriteLine($"rm: Could not remove the directory '{dirName}' because"
                               + "of a lack of permissions.");
             return ;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"rm: Cold not remove the file '{filename}' because"
+            Console.WriteLine($"rm: Cold not remove the directory '{dirName}' because"
                               + $" an error occurred. Error details: {ex.Message}");
+            return ;
         }
         finally
         {
             if (RmConfiguration.IsVerbose())
-                Console.WriteLine($"rm: Deleted file '{filename}' successfully!");
+                Console.WriteLine($"rm: Deleted directory '{dirName}' and its contents"
+                                  + " and subdirectories successfully!");
+        }
+    }
+
+    private void DeleteFile(string fileName)
+    {
+        if (RmConfiguration.IsInteractive() && !RequestItemDeletion(fileName))
+            return ;
+
+        // Delete the file. We could just catch the generic Exception, but we wanted
+        // to add custom error messages for some potential errors.
+
+        try { File.Delete(fileName); }
+        catch (IOException)
+        {
+            Console.WriteLine($"rm: The OS decided to keep using the file '{fileName}',"
+                              + " so it could not be removed.");
+            return ;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            Console.WriteLine($"rm: Could not remove the file '{fileName}' because"
+                              + "of a lack of permissions.");
+            return ;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"rm: Cold not remove the file '{fileName}' because"
+                              + $" an error occurred. Error details: {ex.Message}");
+            return ;
+        }
+        finally
+        {
+            if (RmConfiguration.IsVerbose())
+                Console.WriteLine($"rm: Deleted file '{fileName}' successfully!");
         }
     }
 }
