@@ -4,8 +4,8 @@
 
 internal abstract class CommandTemplate
 {
-    private string[] _commandArgs;
-    private string _commandName;
+    protected string[] _commandArgs;
+    protected string _commandName;
 
     protected CommandTemplate(string[] args, string name)
     {

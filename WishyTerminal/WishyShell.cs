@@ -96,8 +96,7 @@ internal static class WishyShell
 
     private static int _Rm(string[] rmArgs)
     {
-        // Under Construction!
-        return SHELL_COMMAND_SUCCESS;
+        return new Rm(rmArgs).ExecuteCommand();
     }
 }
 

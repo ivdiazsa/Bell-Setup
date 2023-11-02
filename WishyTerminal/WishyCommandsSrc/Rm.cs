@@ -98,7 +98,7 @@ internal sealed class Rm : CommandTemplate
     // Rm Main Class Implementation
     // *****************************
 
-    public Rm(string[] rmargs) : base(rmArgs, "rm") {}
+    public Rm(string[] rmArgs) : base(rmArgs, "rm") {}
 
     // FIXME: As of now, the '--' flag is accepted but results in undefined behavior.
     public override int ExecuteCommand()
@@ -121,10 +121,13 @@ internal sealed class Rm : CommandTemplate
         foreach (string item in targetsToDelete)
         {
             // If no wildcard and file exists, then delete it normally.
-            // If no wildcard and directory exists, check for the presence of the '-r'
-            // or '--recursive' flag. If not, then fail. If yes, delete it.
-            // If wildcard, get all matching files and directories, and then delete them.
+            // If no wildcard and directory exists, check for the presence of
+            // the '-r' or '--recursive' flag. If not, then fail. If yes, delete
+            // it. If wildcard, get all matching files and directories, and then
+            // delete them.
 
+            // FIXME: Wildcards are not implemented yet, so using them will result
+            // in no effect at best.
             if (item.ContainsAny('*', '?'))
             {
                 // Handle wildcards here.
