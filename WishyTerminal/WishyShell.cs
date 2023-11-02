@@ -41,6 +41,10 @@ internal static class WishyShell
                 exitCode = _Cd(target);
                 break;
 
+            case "echo":
+                exitCode = _Echo(args);
+                break;
+
             case "rm":
                 exitCode = _Rm(args);
                 break;
@@ -87,6 +91,16 @@ internal static class WishyShell
         Directory.SetCurrentDirectory(targetDir);
         WishyConsole.UpdatePrompt();
 
+        return SHELL_COMMAND_SUCCESS;
+    }
+
+    // Command     : echo
+    // Parameters  : Text, variables, etc to display and flags
+    // Description : Print the specified text to the console.
+
+    private static int _Echo(string[] echoArgs)
+    {
+        // Under Construction!
         return SHELL_COMMAND_SUCCESS;
     }
 

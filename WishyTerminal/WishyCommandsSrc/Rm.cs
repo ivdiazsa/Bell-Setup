@@ -77,13 +77,16 @@ internal sealed class Rm : CommandTemplate
                         s_config |= RmSettings.VERBOSE;
                         break;
 
+                    // We shouldn't get to this point since the command's class
+                    // ParseCommandArgs() method has already validated all the
+                    // given flags are acceptable by this command.
                     default:
                         break;
                 }
             }
         }
 
-        public static void ResetConfiguration()
+        public static void Reset()
         {
             s_config = RmSettings.NONE;
         }
@@ -106,7 +109,6 @@ internal sealed class Rm : CommandTemplate
         List<string> targetsToDelete = new List<string>();
         List<string> options = new List<string>();
 
-        // CmdUtils.ParseCommandArgs(_args, RmConfiguration.RmOptions, options, targetsToDelete);
         if (!ParseCommandArgs(options, targetsToDelete))
             return WishyShell.SHELL_COMMAND_FAILURE;
 
@@ -161,9 +163,11 @@ internal sealed class Rm : CommandTemplate
             }
         }
 
+        RmConfiguration.Reset();
         return WishyShell.SHELL_COMMAND_SUCCESS;
     }
 
+    // FIXME: Help flag '-h/--help' is not implemented yet.
     private bool ParseCommandArgs(List<string> options, List<string> targets)
     {
         foreach (string item in _commandArgs)
