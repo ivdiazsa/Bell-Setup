@@ -98,7 +98,7 @@ internal sealed class Rm : CommandTemplate
     // Rm Main Class Implementation
     // *****************************
 
-    public Rm(string[] rmargs) : base(rmArgs) {}
+    public Rm(string[] rmargs) : base(rmArgs, "rm") {}
 
     // FIXME: As of now, the '--' flag is accepted but results in undefined behavior.
     public override int ExecuteCommand()
@@ -106,7 +106,9 @@ internal sealed class Rm : CommandTemplate
         List<string> targetsToDelete = new List<string>();
         List<string> options = new List<string>();
 
-        CmdUtils.ParseCommandArgs(_args, RmConfiguration.RmOptions, options, targetsToDelete);
+        // CmdUtils.ParseCommandArgs(_args, RmConfiguration.RmOptions, options, targetsToDelete);
+        if (!ParseCommandArgs(options, targetsToDelete))
+            return WishyShell.SHELL_COMMAND_FAILURE;
 
         if (targetsToDelete.Count == 0)
         {
@@ -157,6 +159,36 @@ internal sealed class Rm : CommandTemplate
         }
 
         return WishyShell.SHELL_COMMAND_SUCCESS;
+    }
+
+    private bool ParseCommandArgs(List<string> options, List<string> targets)
+    {
+        foreach (string item in _commandArgs)
+        {
+            // 'Rm' doesn't have any flags that receive values, so any argument
+            // received that does not start with a '-', can be safely assumed to
+            // be a potential target to delete.
+
+            if (!item.StartsWith('-'))
+            {
+                targets.Add(item);
+                continue;
+            }
+
+            // If there is an invalid option, then there is no point in continuing
+            // to process the rest, since the command won't be able to run anyways.
+
+            if (!CmdOptionInfo.IsValidOption(item)
+                || !RmConfiguration.RmOptions.IsOptionDefined(item))
+            {
+                Console.WriteLine($"Invalid '{_commandName} option '{item}'.");
+                return false;
+            }
+
+            options.Add(item);
+        }
+
+        return true;
     }
 
     private bool RequestItemDeletion(string itemName)
