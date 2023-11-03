@@ -188,7 +188,7 @@ internal sealed class Rm : CommandTemplate
             if (!CmdOptionInfo.IsValidOption(item)
                 || !RmConfiguration.RmOptions.IsOptionDefined(item))
             {
-                Console.WriteLine($"Invalid '{_commandName} option '{item}'.");
+                Console.WriteLine($"Invalid '{_commandName}' option '{item}'.");
                 return false;
             }
 

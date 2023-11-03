@@ -84,12 +84,49 @@ internal sealed class Echo : CommandTemplate
 
     public override int ExecuteCommand()
     {
+        List<string> targetsToPrint = new List<string>();
+        List<string> options = new List<string>();
+
+        if (!ParseCommandArgs(options, targetsToPrint))
+            return WishyShell.SHELL_COMMAND_FAILURE;
+
+        EchoConfiguration.SetConfiguration(options);
+
+        foreach (string item in targetsToPrint)
+        {
+        }
+
         return WishyShell.SHELL_COMMAND_SUCCESS;
     }
 
     // FIXME: Help flag '-h/--help' is not implemented yet.
     private bool ParseCommandArgs(List<string> options, List<string> targets)
     {
+        foreach (string item in _commandArgs)
+        {
+            // 'Echo' doesn't have any flags that receive values, so any argument
+            // received that does not start with a '-', can be safely assumed to
+            // be a potential target to print to the console.
+
+            if (!item.StartsWith('-'))
+            {
+                targets.Add(item);
+                continue;
+            }
+
+            // If there is an invalid option, then there is no point in continuing
+            // to process the rest, since the command won't be able to run anyways.
+
+            if (!CmdOptionInfo.IsValidOption(item)
+                || !EchoConfiguration.EchoOptions.IsOptionDefined(item))
+            {
+                Console.WriteLine($"Invalid '{_commandName}' option '{item}'.");
+                return false;
+            }
+
+            options.Add(item);
+        }
+
         return true;
     }
 }
