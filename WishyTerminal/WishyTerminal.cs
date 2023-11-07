@@ -24,6 +24,7 @@ public class WishyTerminal
             if (nextCommand == "exit")
                 break;
 
+            WishyShell.ExecuteCommand(nextCommand);
             Console.WriteLine("DEV-NOTE: Exit Code: " + lastCmdExitCode);
         }
 
