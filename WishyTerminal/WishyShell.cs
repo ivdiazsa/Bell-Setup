@@ -18,8 +18,8 @@ internal static class WishyShell
         // Here we parse the input and call the command that was called with it.
         (string command, string[] args) = ParseCommandLineArgs(input);
 
-        Console.WriteLine("\nCOMMAND: {0}", command);
-        Console.WriteLine("ARGS: {0}", string.Join('-', args));
+        Console.WriteLine("\nDEV-ONLY - COMMAND: {0}", command);
+        Console.WriteLine("DEV-ONLY - ARGS: {0}", string.Join('-', args));
         return 0;
     }
 
@@ -99,6 +99,11 @@ internal static class WishyShell
                 nextArgSb.Append(c);
             }
         }
+
+        // After the for loop, we still haven't added the last one, so add it here.
+        if (nextArgSb.Length > 0)
+            parsedArgs.Add(nextArgSb.ToString());
+
         return (command, parsedArgs.ToArray());
     }
 }
