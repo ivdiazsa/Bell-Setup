@@ -54,22 +54,6 @@
     (setq-default display-line-numbers-type 'absolute))
   (display-line-numbers-mode 1))
 
-;; Function to emulate Vim's Normal Mode 'W'.
-
-(defun next-word-start (&optional num)
-  "Move to the next (num) word's first character instead of before it."
-  (interactive "p")
-  (forward-word num)
-  (forward-char))
-
-;; Function to emulate Vim's Normal Mode 'dW'.
-
-(defun delete-to-word-start (&optional num)
-  "Delete the next (num) words until the following one's first character."
-  (interactive "p")
-  (kill-word num)
-  (delete-char 1))
-
 (windmove-default-keybindings)
 
 ;; Useful and Productive Keybindings!
@@ -85,8 +69,6 @@
 ;; Text modifying and navigation keyboard shortcuts
 
 (global-set-key (kbd "C-h") 'delete-backward-char)
-(global-set-key (kbd "M-F") 'next-word-start)
-(global-set-key (kbd "M-D") 'delete-to-word-start)
 (global-set-key (kbd "C-x E") 'erase-buffer)
 (global-set-key (kbd "C-x t h") 'sgml-tag)
 (global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
@@ -162,6 +144,9 @@
                ("C#"        (mode . csharp-mode))
                ("C++"       (mode . c++-mode))
                ("CMake"     (mode . cmake-mode))
+               ("Docker"    (or
+                             (mode . dockerfile-mode)
+                             (name . "^\\*?docker")))
                ("MSBuild"   (or
                              (name . "\\.??proj")
                              (name . "\\.props")
