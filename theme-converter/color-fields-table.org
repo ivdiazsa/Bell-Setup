@@ -1,0 +1,90 @@
+* Emacs/VSCode Color Fields Mapping
+
+The following table contains the name of the property/field in an Emacs theme
+elisp file, mapped to its respective counterpart of a VSCode theme json file.
+
+|-----------------------------+-----------------------------------------------------+----------------------------------------|
+| Emacs Property              | VSCode Property                                     | Fallback                               |
+|-----------------------------+-----------------------------------------------------+----------------------------------------|
+| default-fg                  | colors: editor.foreground                           | colors: foreground / #white            |
+| default-bg                  | colors: editor.background                           | colors: background / #black            |
+| builtin                     | tokens: constant.language*                          | tokens: function.support.builtin       |
+|                             |                                                     | / support.type.builtin                 |
+|                             |                                                     | / constant                             |
+|                             |                                                     | / builtin*                             |
+|                             |                                                     | / constant*                            |
+| comment                     | tokens: comment                                     | none                                   |
+| negation-char               | tokens: constant.character.entity                   | tokens: constant.character*            |
+|                             |                                                     | / constant                             |
+| reference                   | tokens: entity.name.tag.reference                   | tokens: constant.other.reference*      |
+|                             |                                                     | / constant                             |
+|                             |                                                     | / constant*                            |
+| constant                    | tokens: constant                                    | none                                   |
+| doc                         | TBD                                                 | TBD                                    |
+| function                    | tokens: entity.name.function                        | tokens: entity.name.function*          |
+|                             |                                                     | / support.function                     |
+|                             |                                                     | / support.function*                    |
+|                             |                                                     | / *function *                          |
+| keyword                     | tokens: keyword                                     | tokens: keyword.operator               |
+|                             |                                                     | / keyword.operator*                    |
+| number                      | tokens: constant.numeric                            | tokens: constant.numeric*              |
+|                             |                                                     | / constant                             |
+|                             |                                                     | / constant*                            |
+| string                      | tokens: string                                      | tokens: string*                        |
+| type                        | tokens: storage                                     | tokens: storage.type                   |
+|                             |                                                     | / storage.type*                        |
+|                             |                                                     | / storage.modifier                     |
+|                             |                                                     | / keyword                              |
+|                             |                                                     | / storage.modifier*                    |
+|                             |                                                     | / storage*                             |
+| variable                    | tokens: variable                                    | tokens: variable.name                  |
+|                             |                                                     | / entity.name.variable                 |
+|                             |                                                     | / entity.name.variable*                |
+|                             |                                                     | / support.variable                     |
+|                             |                                                     | / variable.other                       |
+|                             |                                                     | / variable*                            |
+|                             |                                                     | support.variable*                      |
+| warning                     | colors: editorWarning.foreground                    | colors: *warning.foreground            |
+|                             |                                                     | / *warningForeground                   |
+|                             |                                                     | / *warning *                           |
+| regexp*                     | tokens: string.regexp                               | tokens: source.regexp                  |
+|                             |                                                     | / constant.regexp                      |
+|                             |                                                     | / string                               |
+|                             |                                                     | / string.regexp*                       |
+|                             |                                                     | / regexp*                              |
+| region-bg                   | colors: selection.background                        | colors: editor.selectionBackground     |
+|                             |                                                     | / editor.selectionHighlightBackground  |
+|                             |                                                     | / editor.selectionHighlightBorder      |
+|                             |                                                     | / *selectionBackground *               |
+| region-fg                   | colors: selection.foreground                        | colors: *selectionForeground *         |
+| highlight                   | tokens: string.other.link                           | tokens: string.other.link*             |
+|                             |                                                     | / textLink.foreground                  |
+|                             |                                                     | / *link *                              |
+| hl-line-bg                  | colors: editor.findMatchBackground                  | colors: editor.wordHighlightBackground |
+|                             |                                                     | / @region-bg                           |
+| hl-line-fg                  | colors: editor.findMatchForeground                  | colors: editor.wordHighlightForeground |
+|                             |                                                     | / @region-fg                           |
+| cursor-bg                   | colors: editorCursor.background                     | colors: *Cursor.background             |
+|                             |                                                     | / @default-bg                          |
+| cursor-fg                   | colors: editorCursor.foreground                     | colors: *Cursor.foreground             |
+|                             |                                                     | / @default-fg                          |
+| paren-match-face-bg         | tokens: brackethighlighter.*                        | @warning                               |
+| paren-match-fg              | colors: editorBracketHighlight.foreground           | colors: *.bracketMatchForeground       |
+| paren-match-bg              | colors: editorBracketMatch.background               | colors: *.bracketMatchForeground       |
+| paren-mismatch-bg           | editorBracketHighlight.unexpectedBracket.background | @error                                 |
+| paren-mismatch-fg           | editorBracketHighlight.unexpectedBracket.foreground | none                                   |
+| isearch-bg                  | colors: editor.findMatchHighlightBackground         | colors: editor.findMatchBackground     |
+|                             |                                                     | / @region-bg                           |
+| isearch-fg                  | @region-fg                                          | none                                   |
+| link-fg                     | colors: textLink.foreground                         | colors: @hl-line-fg                    |
+| link-bg                     | colors: textLink.background                         | none                                   |
+| error                       | colors: editorError.foreground                      | tokens: message.error                  |
+|                             |                                                     | / colors: errorForeground              |
+|                             |                                                     | / colors: *.error                      |
+| line-number-bg              | colors: editorLineNumber.background                 | @default-bg                            |
+| line-number-fg              | colors: editorLineNumber.foreground                 | @default-fg                            |
+| line-number-current-line-bg | colors: editorLineNumber.activeBackground           | @line-number-bg                        |
+| line-number-current-line-fg | colors: editorLineNumber.activeForeground           | @line-number-fg                        |
+| header-line-bg              | colors: *header.background                          | @default-bg                            |
+| header-line-fg              | colors: *header.foreground                          | colors: *header.border / @default-fg   |
+|-----------------------------+-----------------------------------------------------+----------------------------------------|
