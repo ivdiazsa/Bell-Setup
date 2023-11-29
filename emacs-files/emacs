@@ -141,17 +141,21 @@
       (quote (("default"
                ("Agenda"    (mode . org-mode))
                ("Bash"      (mode . sh-mode))
-               ("C#"        (mode . csharp-mode))
+               ("C"         (mode . c-mode))
                ("C++"       (mode . c++-mode))
+               ("C#"        (mode . csharp-mode))
                ("CMake"     (mode . cmake-mode))
                ("Docker"    (or
                              (mode . dockerfile-mode)
                              (name . "^\\*?docker")))
+               ("Elisp"     (mode . emacs-lisp-mode))
                ("MSBuild"   (or
                              (name . "\\.??proj")
                              (name . "\\.props")
                              (name . "\\.targets")))
+               ("Python"    (mode . python-mode))
                ("Ruby"      (mode . ruby-mode))
+               ("Text"      (mode . text-mode))
                ("XML"       (name . "\\.xml"))
                ("YAML"      (mode . yaml-mode))
                ("Terminals" (mode . term-mode))
