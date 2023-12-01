@@ -12,7 +12,11 @@
 (setq org-indent-mode t)
 (add-hook 'org-mode-hook 'org-indent-mode)
 
+;; Ensure 'org-capture-templates is defined.
+
+(unless (boundp 'org-capture-templates)
+  (setq-default org-capture-templates '()))
+
 ;; Load each personalized org-mode configuration files.
 
-(load-file "~/Documents/Emacs/dotnet-work-items-orgmode.el")
 (load-file "~/Documents/Emacs/japanese-dictionary-orgmode.el")

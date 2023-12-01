@@ -149,12 +149,15 @@
                              (mode . dockerfile-mode)
                              (name . "^\\*?docker")))
                ("Elisp"     (mode . emacs-lisp-mode))
+               ("JSON"      (mode . json-mode))
                ("MSBuild"   (or
                              (name . "\\.??proj")
                              (name . "\\.props")
                              (name . "\\.targets")))
                ("Python"    (mode . python-mode))
-               ("Ruby"      (mode . ruby-mode))
+               ("Ruby"      (or
+                             (mode . ruby-mode)
+                             (mode . inf-ruby-mode)))
                ("Text"      (mode . text-mode))
                ("XML"       (name . "\\.xml"))
                ("YAML"      (mode . yaml-mode))
@@ -221,7 +224,9 @@
  '(menu-bar-mode t)
 
  '(package-selected-packages
-   '(evil
+   '(inf-ruby
+     org-bullets
+     evil
      tool-bar+
      dot-mode
      multiple-cursors
