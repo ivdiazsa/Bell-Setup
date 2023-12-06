@@ -4,7 +4,7 @@
 
 ;; Let's save our org filenames in variables for easier access and better readability.
 
-(defvar work-todos-file "~/Documents/Emacs/my-todos.org")
+(defvar dotnet-work-todos-file "~/Documents/Emacs/dotnet-todos.org")
 
 ;; Setting priorities to be with numbers.
 
@@ -16,108 +16,64 @@
 ;;  New Item Templates!
 ;; *********************
 
-;; We will be classifying our work items per area/lane of work, so we will have
-;; to specify it when filing the individual work items/tasks. This function asks
-;; and retrieves that information.
+;; Since org-mode is for everyone, let's add the japanese dictionary capture
+;; templates to emacs' "org-capture-templates", rather than setting it from
+;; scratch. We don't want to delete the templates from other org-mode components
+;; we might have initialized prior to this one :)
 
-(defun get-work-item-category ()
-  "Prompt the user for the type of work item to be filed (category), and then
-look for it in the org file. If found, the work item filled template will be
-inserted there."
-  (let ((category (read-string "Enter Work Item Category: ")))
-    (find-file work-todos-file)
-    (goto-char 0)
-    (search-forward (format "** %s" category) nil t 1)))
-
-;;
-
-(define-skeleton pr-template
-  "Prompt the user for the PR's number and repository to add it to the current
-work item."
-  > "*- Pull Request Number: " (setq pr (skeleton-read "Enter the PR's Number: ")) "*" \n
-  > "*- Link: [[https://github.com/" (skeleton-read "Enter the Repository's Name: ")
-  "/pull/" pr "]]*")
-
-;; List containing all the templates for the work items and general org layouts.
-
-;; (push
-;;  '("c" "New Item Category"
-;;    entry (file+headline work-todos-file "Work Items")
-;;    "** %^{Items Category}"
-;;    :empty-lines-before 1 :immediate-finish :jump-to-captured)
-;;  org-capture-templates)
-
-;; (push
-;;  '("t" "New Work Item"
-;;    entry (file+function work-todos-file get-work-item-category)
-;;    "*** Not Started [#2] %^{Job Item Title}\n\n\
-;; *- Repository: %^{Repository Name (what goes after github.com/)}*\n\
-;; *- Issue Number: %^{Issue Number}*\n\
-;; *- Link: [[https://github.com/%\\2/issues/%\\3]]*\n\n\
-;; :Created: %<%Y/%m/%e %l:%M %P %Z>\n\n\
-;; %^{Description}\n"
-;;    :empty-lines 1 :immediate-finish :jump-to-captured)
-;;  org-capture-templates)
-
-(setq-default org-capture-templates
-      '(
-        ;; Work Items are classified by categories, depending on what lane of work
-        ;; they cover.
-
-        ("c" "New Item Category"
-         entry (file+headline work-todos-file "Work Items")
-         "** %^{Items Category}"
-         :empty-lines-before 1 :immediate-finish :jump-to-captured)
-
-        ;; The main template for Work Items. It requires the category of the
-        ;; item, a title to identify it, the Github repository, Issue number,
-        ;; and a brief description explaining what happened, what is the
-        ;; work item's motivation, and so on.
-
-        ("t" "New Work Item"
-         entry (file+function work-todos-file get-work-item-category)
-         "*** Not Started [#2] %^{Job Item Title}\n\n\
-*- Repository: %^{Repository Name (what goes after github.com/)}*\n\
-*- Issue Number: %^{Issue Number}*\n\
-*- Link: [[https://github.com/%\\2/issues/%\\3]]*\n\n\
+(add-to-list 'org-capture-templates
+             '("i" "New Work Item"
+               entry (file+headline dotnet-work-todos-file "Work Items")
+               "** NEW ITEM [#2] %^{Job Item Title}\n\
+%^g\n\
 :Created: %<%Y/%m/%e %l:%M %P %Z>\n\n\
-%^{Description}\n"
-         :empty-lines 1 :immediate-finish :jump-to-captured)))
+%^{Job Item Description}\n\n\
+*- Repository: %^{Repository Name (what comes after github.com/)}*\n\
+*- Issue Number: %^{Issue Number}*\n\
+*- Link: [[https://github.com/%\\3/issues/%\\4]]*\n\n"
+               :empty-lines 1 :immediate-finish :jump-to-captured)
+             t)
 
 ;; **************
 ;;  Item States!
 ;; **************
 
 (setq org-todo-keywords
-      '((sequence "Not Started(t)"
-                  "Active(a!)"
-                  "Inactive(i@/!)"
-                  "Researching(r@/!)"
-                  "Blocked(b@/!)"
-                  "Waiting(w@/!)"
-                  "Warning(e@/!)"
-                  "|"
-                  "Complete(c!)"
-                  "Backlogged(l@/!)"
-                  "Discarded(d@/!)"
-       ))
-)
+      '((sequence "New Item"
+                  "In Progress(!)"
+                  "Researching(@/!)"
+                  "Backlogged(@/!)"
+                  "In Review(!)"
+                  "Blocked(@/!)"
+                  "Warning(@/!)"
+                  "Complete(!)"
+                  "Discarded(@/!)")))
 
 ;; ****************
 ;;  States Colors!
 ;; ****************
 
 (setq org-todo-keyword-faces
-      '(
-        ("Not Started" . (:foreground "#00CDCD" :weight bold))
-        ("Active"      . (:foreground "#3BD1B7" :weight bold))
-        ("Inactive"    . (:foreground "#005EB8" :weight bold))
+      '(("New Item"    . (:foreground "#005EB8" :weight bold))
+        ("In Progress" . (:foreground "#3BD1B7" :weight bold))
         ("Researching" . (:foreground "#FB7306" :weight bold))
-        ("Blocked"     . (:foreground "#A348C8" :weight bold))
-        ("Waiting"     . (:foreground "#C8A347" :weight bold))
+        ("Backlogged"  . (:foreground "#A348C8" :weight bold))
+        ("In Review"   . (:foreground "#F1C232" :weight bold))
+        ("Blocked"     . (:foreground "#D13B55" :weight bold))
         ("Warning"     . (:foreground "#FF1100" :weight bold))
         ("Complete"    . (:foreground "#19D22A" :weight bold))
-        ("Backlogged"  . (:foreground "#919191" :weight bold))
-        ("Discarded"   . (:foreground "#D65073" :weight bold))
-       )
-)
+        ("Discarded"   . (:foreground "#A7A7A7" :weight bold))))
+
+;; ************
+;;  Item Tags!
+;; ************
+
+(setq org-tag-list
+      '(("Infrastructure" . nil)))
+
+;; **************
+;;  Tags Colors!
+;; **************
+
+(setq org-tag-faces
+      '(("Infrastructure" . (:foreground "#00AF99" :weight bold))))

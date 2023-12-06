@@ -20,3 +20,4 @@
 ;; Load each personalized org-mode configuration files.
 
 (load-file "~/Documents/Emacs/japanese-dictionary-orgmode.el")
+(load-file "~/Documents/Emacs/dotnet-work-items-orgmode.el")
