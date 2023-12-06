@@ -64,6 +64,15 @@ class ThemeConverter
     end
   end
 
+  def debugstuff
+    vscode_theme_json = JSON.load(File.read(@vscode_file))
+    theme_colors = vscode_theme_json['colors']
+    token_colors = vscode_theme_json['tokenColors']
+
+    puts "\nCOLORS:\n#{theme_colors}\n"
+    # puts "TOKENS:\n#{token_colors}"
+  end
+
   private
 
   def gen_deftheme
@@ -81,8 +90,75 @@ class ThemeConverter
     return code
   end
 
-  def gen_colors_letlist(theme_c. tokens_c)
+  def gen_colors_letlist(theme_c, tokens_c)
     code = "\n(let ((class '((class color) (min-colors 89)))\n"
+
+    # The 'color-properties.txt' file contains a table with 4 columns:
+    #
+    #    * Name of color variable in Emacs.
+    #    * JSON Key where the VSCode property is found in the theme.json file.
+    #    * Name of the equivalent property in the VSCode theme file.
+    #    * List of other VSCode properties we could consider equivalent and use,
+    #      in the case the main one is not found.
+    #
+    # So, the first value will be used to name the 'let' variable containing the
+    # color hex value in our Emacs theme 'el' file.
+    #
+    # Now, the VSCode theme json file can have the values we're looking for in
+    # under one of two keys: 'Colors' and 'Tokens'. This is the meaning of the
+    # second value in the table row described above.
+    #
+    # The third and fourth values are the VSCode properties equivalent to the
+    # one in Emacs we want to translate to. Ideally, the third value should be
+    # enough, but VSCode themes can be written in a myriad of ways. So, the
+    # property we need might not be there. For these cases, we have a list of
+    # fallback properties we can use. In theory, we're guaranteed to find at
+    # least one of those :)
+
+    File.foreach('color-properties.txt') do |row|
+      values = row.split(' ')
+      color = "#010101"
+
+      emacs_colorsem = values[0]
+      vscode_key = values[1]
+      vscode_colorprop = values[2]
+      vscode_fallbacks = values[3]
+
+      puts "Emacs Property: #{emacs_colorsem}"
+
+      if (vscode_key == 'colors') then
+        color = get_hex_from_colors_hash(theme_c, vscode_colorprop, vscode_fallbacks)
+
+      elsif (vscode_key == 'tokens') then
+        color = get_hex_from_tokens_hash(tokens_c, vscode_colorprop, vscode_fallbacks)
+      end
+
+      code << "      (#{emacs_colorsem} ###Color goes here###)"
+    end
+  end
+
+  def get_hex_from_colors_hash(colors, target_prop, fallback_props)
+    # If the ideal key is present in the VSCode theme file, then our task here
+    # is complete.
+    if (colors.has_key?(target_prop)) then
+      puts "Found property key #{target_prop} with value #{colors[target_prop]}"
+      return colors[target_prop] if colors.has_key?(target_prop)
+    end
+
+    fallbacks = []
+
+    puts "Property key #{target_prop} was not found. Checking the fallbacks..."
+    fallback_props.split(',').each { |prop| fallbacks << [prop, colors[prop]] }
+
+    puts "The following fallback properties were found:"
+    fallbacks.each_with_index { |prop, i| puts "  #{i}) #{prop[0]} => '#{prop[1]}'" }
+
+    # Prompt the user for which fallback property they want to use.
+    # Return the hex code of said property.
+  end
+
+  def get_hex_from_tokens_hash(tokens, target_prop, fallback_props)
+    "#fefefe"
   end
 end
 
@@ -95,4 +171,5 @@ vscode_file = ARGV[0]
 theme_name = ARGV.length > 1 ? ARGV[1] : "ported-from-vscode"
 
 app = ThemeConverter.new(vscode_file, theme_name)
-app.translate()
+# app.translate
+app.debugstuff
