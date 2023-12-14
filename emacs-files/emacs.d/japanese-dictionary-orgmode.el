@@ -2,9 +2,35 @@
 ;;  Org-Mode Configuration!
 ;; *************************
 
+;; (defun test-add-to-org-file (header)
+;;   ""
+;;   (find-file "~/Documents/Emacs/jlexicon.org")
+;;   (goto-char (org-find-exact-headline-in-buffer header))
+;;   (or (org-goto-sibling) (goto-char (point-max)))
+;;   (forward-line -1)
+;;   (insert "TEST!"))
+
+;; (defun testy-2 (header)
+;;   ""
+;;   (find-file "~/Documents/Emacs/jlexicon.org")
+;;   (if-let ((header-pos (org-find-exact-headline-in-buffer header)))
+;;       (and (goto-char header-pos) (org-goto-sibling))
+;;     (and (goto-char (point-max)) (insert "\n")))
+;;   (forward-line -1)
+;;   (insert "** New Section"))
+
 ;; Let's save our org filenames in variables for easier access and better readability.
 
-(defvar japanese-dictionary-file "~/Documents/Emacs/jisho.org")
+(defvar japanese-lexicon-file "~/Documents/Emacs/jlexicon.org")
+(defvar japanese-dictionary-file "~/Documents/Emacs/jdictionary.org")
+
+;; Since we want to output our new words to both files, the dictionary and the
+;; lexicon, we need to somehow tell Emacs to write it down to the second file
+;; after 'org-capture' takes care of the first. We will use a function for this,
+;; which is described and defined later, but we need a buffer to store the
+;; word's information temporarily.
+
+(setq-default word-capture-buffer '())
 
 ;; *********************
 ;;  New Item Templates!
@@ -17,7 +43,7 @@
 (defun get-word-found-place ()
   "Prompt for the source of where the given word was found."
   (let ((place (read-string "Enter the place you found the word at: ")))
-    (find-file japanese-dictionary-file)
+    (find-file japanese-lexicon-file)
     (goto-char 0)
     (search-forward (format "** %s" place) nil t 1)))
 
@@ -43,6 +69,10 @@ and return its suffix if needed."
 ;; record the hiragana-only writing to be able to easily review how they are
 ;; pronounced, since memorizing kanji's pronunciations is... not gonna happen.
 
+;; FIXME: This function's conditioning is inverted. Japanese Words will always
+;;        have a Hiragana version. It's the Kanji version that might not be present
+;;        for a few words.
+
 (defun get-hiragana-if-has-kanji ()
   "Prompt for the word's hiragana-only writing if it has kanji on it. If not, then
 leave this field blank."
@@ -50,6 +80,11 @@ leave this field blank."
     (if (string-equal hiragana-writing "")
         ""
       (format "(%s)" hiragana-writing))))
+
+;; ENHANCEME: Add the functionality to open a temporary buffer, displaying all the
+;;            words that have been entered as part of the package so far. It helps
+;;            tremendously when writing down the example, as I don't tend to memorize
+;;            the words after just one time of reading and writing them :)
 
 (defun get-group-of-words-with-example ()
   "Prompt for a set of words with their respective meanings, as well as the example
@@ -100,40 +135,40 @@ n-times, followed by one of the 'Example Using Japanese Words' one."
 ;; them. Makes it easier to remember, and look up whenever needed :)
 
 (add-to-list 'org-capture-templates
- '("j" "New Place of Japanese Knowledge"
-   entry (file+headline japanese-dictionary-file "Japanese Learning")
-   "** %^{Word Source}"
-   :empty-lines 1 :immediate-finish :jump-to-captured)
- t)
+             '("j" "New Place of Japanese Knowledge"
+               entry (file+headline japanese-lexicon-file "Japanese Learning")
+               "** %^{Word Source}"
+               :empty-lines 1 :immediate-finish :jump-to-captured)
+             t)
 
 ;; Template to easily write down the word I found with both, Kanji and Hiragana
 ;; writings, as well as its definition without dealing with fixing weird spacing
 ;; and all that stuff.
 
 (add-to-list 'org-capture-templates
- '("w" "New Japanese Word"
-   item (file+function japanese-dictionary-file get-word-found-place)
-   "%^{With Kanji if has}%(get-suru-na-if-so) %(get-hiragana-if-has-kanji): %^{Definition}"
-   :empty-lines 0 :immediate-finish :jump-to-captured)
- t)
+             '("w" "New Japanese Word"
+               item (file+function japanese-lexicon-file get-word-found-place)
+               "%^{With Kanji if has}%(get-suru-na-if-so) %(get-hiragana-if-has-kanji): %^{Definition}"
+               :empty-lines 0 :immediate-finish :jump-to-captured)
+             t)
 
 ;; Template to easily write an example sentence in Japanese, with its respective
 ;; translation to English.
 
 (add-to-list 'org-capture-templates
- '("e" "Example Using Japanese Words"
-   item (file+function japanese-dictionary-file get-word-found-place)
-   "*%^{Sentence in Japanese} -> %^{Sentence in English}*"
-   :empty-lines-after 1 :immediate-finish :jump-to-captured)
- t)
+             '("e" "Example Using Japanese Words"
+               item (file+function japanese-lexicon-file get-word-found-place)
+               "*%^{Sentence in Japanese} -> %^{Sentence in English}*"
+               :empty-lines-after 1 :immediate-finish :jump-to-captured)
+             t)
 
 ;; Template that combines and packs the new Japanese word and sentence templates.
 ;; It prompts for as many words as the user needs, and then for an optional
 ;; example sentence.
 
 (add-to-list 'org-capture-templates
- '("p" "Set of Words With an Optional Example"
-   item (file+function japanese-dictionary-file get-word-found-place)
-   #'get-group-of-words-with-example
-   :empty-lines 1 :immediate-finish :jump-to-captured)
- t)
+             '("p" "Set of Words With an Optional Example"
+               item (file+function japanese-lexicon-file get-word-found-place)
+               #'get-group-of-words-with-example
+               :empty-lines 1 :immediate-finish :jump-to-captured)
+             t)

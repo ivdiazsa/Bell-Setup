@@ -22,13 +22,14 @@
 ;; Some file extensions use the same syntax as XML. Let Emacs to enable xml-mode
 ;; by default when editing these types of files.
 
-(add-to-list 'auto-mode-alist '("\\.csproj\\'"  . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.ilproj\\'"  . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.proj\\'"    . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.depproj\\'" . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.sfxproj\\'" . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.props\\'"   . xml-mode))
-(add-to-list 'auto-mode-alist '("\\.targets\\'" . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.csproj\\'"     . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.ilproj\\'"     . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.proj\\'"       . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.depproj\\'"    . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.sfxproj\\'"    . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.bundleproj\\'" . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.props\\'"      . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.targets\\'"    . xml-mode))
 
 ;; Some nice general configuration :)
 
@@ -149,7 +150,9 @@
                              (mode . dockerfile-mode)
                              (name . "^\\*?docker")))
                ("Elisp"     (mode . emacs-lisp-mode))
-               ("JSON"      (mode . json-mode))
+               ("JSON"      (or
+                             (mode . json-mode)
+                             (name . "\\.json")))
                ("MSBuild"   (or
                              (name . "\\.??proj")
                              (name . "\\.props")
