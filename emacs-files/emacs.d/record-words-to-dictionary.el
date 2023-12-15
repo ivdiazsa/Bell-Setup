@@ -15,10 +15,14 @@
 
 (setq-default word-capture-buffer '())
 
+
 ;; *********************************
 ;;  New Item Data Prompt Functions!
 ;; *********************************
 
+;; *****************
+;; get-suru-na-if-so
+;; *****************
 ;; 'Suru' verbs and 'Na' adjectives use said suffixes to be identified. However,
 ;; they are only written with them in certain cases. Therefore, we want to write
 ;; them inside parentheses to show it's not an always used thing, or nothing at
@@ -37,6 +41,10 @@ and return its suffix if needed."
           ((string-equal word-type "suru") "(する)")
           ((string-equal word-type "")     ""))))
 
+
+;; ***********************
+;; (get-word-written-form)
+;; ***********************
 ;; Most words have at least a kanji in their way of writing them. We also want to
 ;; record the hiragana-only writing to be able to easily review how they are
 ;; pronounced, since memorizing kanji's pronunciations is... not gonna happen.
@@ -48,6 +56,10 @@ capture: One for kanji+hiragana or katakana, and one for hiragana-only."
                        (format "Enter the word's %s spelling: " spelling-type))))
     (format "%s" word-writing)))
 
+
+;; ************
+;; get-new-word
+;; ************
 ;; Get the new word's information: Hiragana writing, Kanji writing if the word has
 ;; one, and the word's definition in English.
 
@@ -66,33 +78,74 @@ the dictionary."
             hiragana-writing
             definition)))
 
+
+;; ****************
+;; get-new-sentence
+;; ****************
+;; Get an example sentence in Japanese with it's English translation.
+
+(defun get-new-sentence ()
+  "Prompt for the example sentence in Japanese, and then for its English translation.
+If the 'good/official' English translation differs from how it would be if translated
+literally, there is another prompt afterwards to retrieve this case."
+  (let ((japanese-sentence (read-string
+                            "Enter the example sentence in Japanese: "))
+        (english-translation (read-string
+                              "Enter the sentence's English translation: "))
+        (literal-translation (read-string
+                              "Enter the literal translation if it differs: ")))
+
+    (unless (string-empty-p literal-translation)
+      (concat english-translation " (/Lit./ " literal-translation ")."))
+    (format "*- %s -> %s*" japanese-sentence english-translation)))
+
+
+;; ********************
+;; get-word-found-place
+;; ********************
 ;; We will be classifying our words per semantic field in which we found them. So,
 ;; we have to specify said field when filing the individual words' information. This
 ;; function asks and retrieves that information.
 
+    ;; (find-file japanese-lexicon-file)
+    ;; (goto-char 0)
+    ;; (search-forward (format "** %s" place) nil t 1)))
+
 (defun get-word-found-place ()
   "Prompt for the source of where the given word was found, and move the cursor to
 said position in the file."
+  (find-file japanese-lexicon-file)
   (let ((place (read-string "Enter the place you found the word at: ")))
-    (find-file japanese-lexicon-file)
-    (goto-char 0)
-    (search-forward (format "** %s" place) nil t 1)))
+    (if-let ((header-pos (org-find-exact-headline-in-buffer place)))
+        (goto-char header-pos)
+      (goto-char (point-max)))))
 
+
+;; *************************
+;; record-word-to-dictionary
+;; *************************
 ;; Every time we add a new word to our lexicon, we also want it added to our dictionary,
 ;; so that we also have it in an easy way to look it up alphabetically... Or perhaps
 ;; I should say syllabarily :)
 
-;; ALGORITHM DRAFT:
-;;
-;; - Open the dictionary file.
-;; - Go to the very beginning of the file.
-;; - Search for the specific heading. In this case, it's the first syllable of the word.
-;; - If found, go the bottom of said heading, and insert the word item.
-;; - If not found, add a new header for this syllable, and insert the word item there.
-
 (defun record-word-to-dictionary (hiragana kanji nasuru english)
   "Add captured word entry to its respective place in the dictionary after being
-added to the lexicon.")
+added to the lexicon."
+  (find-file japanese-dictionary-file)
+  (let* ((syllable (substring hiragana 0 1))
+         (syl-header-pos (org-find-exact-headline-in-buffer syllable)))
+
+    (if syl-header-pos
+        (progn
+          (goto-char syl-header-pos)
+          (if (org-goto-sibling)
+              (forward-line -1)
+            (goto-char (point-max))))
+      (and
+       (goto-char (point-max))
+       (insert (format "** %s\n\n" syllable))))
+    (insert (format "- %s%s (%s): %s\n" hiragana nasuru kanji english))))
+
 
 ;; *********************
 ;;  New Item Templates!
@@ -110,5 +163,12 @@ added to the lexicon.")
              '("j" "New Place of Japanese Knowledge"
                entry (file+headline japanese-lexicon-file "Japanese Learning")
                "** %^{Word Source}"
+               :empty-lines 1 :jump-to-captured t)
+             t)
+
+(add-to-list 'org-capture-templates
+             '("w" "New Japanese Word"
+               item (file+function japanese-lexicon-file get-word-found-place)
+               #'get-new-word
                :empty-lines 1 :jump-to-captured t)
              t)
