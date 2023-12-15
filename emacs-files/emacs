@@ -46,6 +46,40 @@
 (setq-default ediff-forward-word-function 'forward-char)
 (setq-default delete-selection-mode t)
 
+;; List containing the checkpoint characters for the *-word-conservative functions
+;; defined later on.
+;;
+;; KEY:
+;; 10 = Newline/Line Feed
+;; 32 = Space
+;; 40 = Open Parenthesis
+;; 41 = Close Parenthesis
+;; 45 = Dash/Hyphen/Minus
+;; 46 = Period/Dot/Full Stop
+;; 58 = Colon
+;; 59 = Semicolon
+;; 95 = Underscore
+
+(defvar conservative-word-boundaries '(40 41 45 46 58 59 95))
+(defvar whitespaces '(10 32))
+
+;; Getter function to know whether a character is a word boundary defined by us.
+
+(defun is-conservative-boundary (character)
+  "Return 't' if CHARACTER is in the 'conservative-word-boundaries' list,
+or 'nil' otherwise."
+  (if (member character conservative-word-boundaries)
+      t
+    nil))
+
+;; Getter function to know whether a character is a whitespace one defined by us.
+
+(defun is-whitespace (character)
+  "Return 't' if CHARACTER is in the 'whitespaces' list, or 'nil' otherwise."
+  (if (member character whitespaces)
+      t
+    nil))
+
 ;; Function to easily toggle between absolute/normal and relative line numbering.
 
 (defun toggle-line-numbers-type ()
@@ -54,6 +88,75 @@
       (setq-default display-line-numbers-type 'relative)
     (setq-default display-line-numbers-type 'absolute))
   (display-line-numbers-mode 1))
+
+;; Function to jump forward between words without ignoring symbols-only words.
+
+(defun forward-word-conservative (arg)
+  "Move forward to the next word conservatively. In this context, conservatively
+means to stop at the next boundary or word start character (i.e. 'words' made up
+of just symbols also count as words). With argument ARG, do this that many times."
+  (interactive "p")
+  (if (< arg 0)
+      (backward-word-conservative (* arg -1))
+    (dotimes (number arg)
+      ;; If we're on a whitespace character, then don't do anything for the time being.
+      ;; Every case finishes by skipping the remaining whitespace, so we'll do that
+      ;; at the end, after this 'cond' clause.
+      (cond ((is-whitespace (char-after)))
+
+            ;; If we're on a boundary character, then our target is the next word
+            ;; character. So, we skip any contiguous boundary characters, and later
+            ;; on, the whitespace, if there is any.
+            ((is-conservative-boundary (char-after))
+             (while (is-conservative-boundary (char-after))
+               (forward-char)))
+
+            ;; And finally, if we're on a text character, then our target is either
+            ;; the next word boundary character, or the next word character after
+            ;; a whitespace
+            (t (while (and (not (is-conservative-boundary (char-after)))
+                           (not (is-whitespace (char-after))))
+                 (forward-char))))
+
+      ;; Skip the last remaining whitespace if any.
+      (while (is-whitespace (char-after))
+        (forward-char)))))
+
+;; Function to jump backward between words without ignoring symbols-only words.
+
+(defun backward-word-conservative (arg)
+  "Move backward to the previous word conservatively. In this context, conservatively
+means to stop at the previous boundary or word start character (i.e. 'words' made up
+of just symbols also count as words). With argument ARG, do this that many times."
+  (interactive "p")
+  (if (< arg 0)
+      (forward-word-conservative (* arg -1))
+    (dotimes (number arg)
+
+      (cond ((is-whitespace (char-after))
+             (while (is-whitespace (char-after))
+               (backward-char)))
+
+            (not (is-whitespace (char-after))
+                 
+    ;; (cond
+    ;;  ((is-whitespace (char-after))
+    ;;   (while (is-whitespace (char-after))
+    ;;     (backward-char))
+    ;;   (while (and (not (is-conservative-boundary (char-after)))
+    ;;               (not (is-whitespace (char-before))))
+    ;;     (backward-char)))
+
+    ;;  ((is-conservative-boundary (char-after))
+    ;;   (backward-char)
+    ;;   (while (and (not (is-conservative-boundary (char-after)))
+    ;;               (not (is-whitespace (char-before))))
+    ;;     (backward-char)))
+
+    ;;  (t (while (and (not (is-conservative-boundary (char-after)))
+    ;;                 (not (is-whitespace (char-before))))
+    ;;       (backward-char))))))
+
 
 (windmove-default-keybindings)
 
@@ -75,6 +178,10 @@
 (global-set-key (kbd "M-s M-s") 'wrap-region-global-mode)
 (global-set-key (kbd "M-s M-r") 'narrow-to-region)
 (global-set-key (kbd "M-s M-e") 'widen)
+(global-set-key (kbd "M-f") 'forward-word-conservative)
+(global-set-key (kbd "M-b") 'backward-word-conservative)
+(global-set-key (kbd "M-F") 'forward-word)
+(global-set-key (kbd "M-B") 'backward-word)
 
 ;; Frame manipulation keyboard shortcuts
 
@@ -113,12 +220,14 @@
                           ("custom-set-faces"     . font-lock-keyword-face)
                           ("custom-set-variables" . font-lock-keyword-face)
                           ("define-key"           . font-lock-keyword-face)
+                          ("eql"                  . font-lock-keyword-face)
+                          ("equal"                . font-lock-keyword-face)
                           ("global-set-key"       . font-lock-keyword-face)
                           ("global-unset-key"     . font-lock-keyword-face)
                           ("kbd"                  . font-lock-keyword-face)
                           ("load-file"            . font-lock-keyword-face)
                           ("nil"                  . font-lock-keyword-face)
-                          ("put"                  . font-lock-keyword-face)))
+                          ("not"                  . font-lock-keyword-face)))
 
 (font-lock-add-keywords 'csharp-mode
                         '(("init" . font-lock-keyword-face)))
@@ -227,7 +336,8 @@
  '(menu-bar-mode t)
 
  '(package-selected-packages
-   '(inf-ruby
+   '(json-mode
+     inf-ruby
      org-bullets
      evil
      tool-bar+
