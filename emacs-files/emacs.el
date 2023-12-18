@@ -30,6 +30,7 @@
 (add-to-list 'auto-mode-alist '("\\.bundleproj\\'" . xml-mode))
 (add-to-list 'auto-mode-alist '("\\.props\\'"      . xml-mode))
 (add-to-list 'auto-mode-alist '("\\.targets\\'"    . xml-mode))
+(add-to-list 'auto-mode-alist '("\\.rpy\\'" . python-mode))
 
 ;; Some nice general configuration :)
 
@@ -50,35 +51,75 @@
 ;; defined later on.
 ;;
 ;; KEY:
+;;  9 = Tab
 ;; 10 = Newline/Line Feed
+;; 11 = Vertical Tabulation
+;; 12 = Form Feed
 ;; 32 = Space
 ;; 40 = Open Parenthesis
 ;; 41 = Close Parenthesis
 ;; 45 = Dash/Hyphen/Minus
 ;; 46 = Period/Dot/Full Stop
+;; 47 = Slash/Divide
 ;; 58 = Colon
 ;; 59 = Semicolon
+;; 60 = Open Angled Bracket/Less Than
+;; 62 = Close Angled Bracket/Greater Than
+;; 91 = Open Square Bracket
+;; 92 = Backslash
+;; 93 = Close Square Bracket
 ;; 95 = Underscore
 
-(defvar conservative-word-boundaries '(40 41 45 46 58 59 95))
-(defvar whitespaces '(10 32))
+(defvar boundary-symbols '(45 46 47 58 59 92 95))
+(defvar opening-symbols '(40 60))
+(defvar closing-symbols '(41 62))
+(defvar whitespaces '(9 10 11 12 32))
 
 ;; Getter function to know whether a character is a word boundary defined by us.
 
 (defun is-conservative-boundary (character)
-  "Return 't' if CHARACTER is in the 'conservative-word-boundaries' list,
+  "Return 't' if CHARACTER is in one of the conservative boundary symbols lists,
 or 'nil' otherwise."
-  (if (member character conservative-word-boundaries)
-      t
-    nil))
+  (or (member character boundary-symbols)
+      (member character opening-symbols)
+      (member character closing-symbols)
+      (member character whitespaces)))
+
+;; Getter function to know whether a character is an opening symbol defined by us.
+
+(defun is-opening-symbol (character)
+  "Return 't' if CHARACTER is in the 'opening-symbols' list, or 'nil' otherwise."
+  (if (member character opening-symbols) t nil))
+
+;; Getter function to know whether a character is a closing symbol defined by us.
+
+(defun is-closing-symbol (character)
+  "Return 't' if CHARACTER is in the 'closing-symbols' list, or 'nil' otherwise."
+  (if (member character closing-symbols) t nil))
+
+;; Getter function to know whether a character is an encapsulating bracket one
+;; defined by us.
+
+(defun is-bracket-symbol (character)
+  "Return 't' if CHARACTER is in either the 'opening-symbols' or 'closing-symbols'
+lists, or 'nil' otherwise."
+  (if (or (is-opening-symbol character)
+          (is-closing-symbol character))
+      t nil))
 
 ;; Getter function to know whether a character is a whitespace one defined by us.
 
 (defun is-whitespace (character)
   "Return 't' if CHARACTER is in the 'whitespaces' list, or 'nil' otherwise."
-  (if (member character whitespaces)
-      t
-    nil))
+  (if (member character whitespaces) t nil))
+
+;; Getter function to know whether a character is a spacing delimiter defined
+;; by us (i.e. space or tab).
+
+(defun is-spacing-delimiter (character)
+  "Return 't' if CHARACTER is a space or a tab, or 'nil' otherwise."
+  (or (equal 9 character)
+      (equal 32 character)))
 
 ;; Function to easily toggle between absolute/normal and relative line numbering.
 
@@ -96,31 +137,45 @@ or 'nil' otherwise."
 means to stop at the next boundary or word start character (i.e. 'words' made up
 of just symbols also count as words). With argument ARG, do this that many times."
   (interactive "p")
+
+  ;; A negative arg means we want to move backward, so we call the conservative
+  ;; backwards word friend function.
   (if (< arg 0)
       (backward-word-conservative (* arg -1))
     (dotimes (number arg)
-      ;; If we're on a whitespace character, then don't do anything for the time being.
-      ;; Every case finishes by skipping the remaining whitespace, so we'll do that
-      ;; at the end, after this 'cond' clause.
-      (cond ((is-whitespace (char-after)))
 
-            ;; If we're on a boundary character, then our target is the next word
-            ;; character. So, we skip any contiguous boundary characters, and later
-            ;; on, the whitespace, if there is any.
-            ((is-conservative-boundary (char-after))
-             (while (is-conservative-boundary (char-after))
-               (forward-char)))
+      (let ((start (char-after)))
+        ;; If we begin on a normal text character, then first, we need to find its
+        ;; boundary to define where we should go next.
+        (while (not (is-conservative-boundary (char-after)))
+          (forward-char))
 
-            ;; And finally, if we're on a text character, then our target is either
-            ;; the next word boundary character, or the next word character after
-            ;; a whitespace
-            (t (while (and (not (is-conservative-boundary (char-after)))
-                           (not (is-whitespace (char-after))))
-                 (forward-char))))
+        (cond (;; If we began at a section breaking character (e.g. newline), then
+               ;; our next word starts at the first non-whitespace character.
+               (and (is-whitespace (char-after))
+                    (not (is-spacing-delimiter start)))
+               (while (is-whitespace (char-after))
+                 (forward-char)))
 
-      ;; Skip the last remaining whitespace if any.
-      (while (is-whitespace (char-after))
-        (forward-char)))))
+              ;; If we encounter a bracket symbol, then our next stop is the end of
+              ;; that chain of brackets.
+              ((is-bracket-symbol (char-after))
+               (while (is-bracket-symbol (char-after))
+                 (forward-char)))
+
+              ;; If we encounter any other boundary symbol (e.g. hyphens, underscores),
+              ;; then our next stop is what comes after them.
+              (t (while (and (is-conservative-boundary (char-after))
+                             (not (is-whitespace (char-after))))
+                   (forward-char))))
+
+        ;; If we began on any character other than section boundaries, and we ended
+        ;; up on a space after all the movements in the previous 'cond' statement,
+        ;; then we continue until we find our next word or the end of the current line.
+        (unless (and (is-whitespace start)
+                     (not (is-spacing-delimiter start)))
+          (while (is-spacing-delimiter (char-after))
+            (forward-char)))))))
 
 ;; Function to jump backward between words without ignoring symbols-only words.
 
@@ -131,32 +186,23 @@ of just symbols also count as words). With argument ARG, do this that many times
   (interactive "p")
   (if (< arg 0)
       (forward-word-conservative (* arg -1))
-    (dotimes (number arg)
+    (dotimes (number arg))))
 
-      (cond ((is-whitespace (char-after))
-             (while (is-whitespace (char-after))
-               (backward-char)))
+      ;; Normal Case:
+      ;; forw*ard-char
+      ;; forw*ard char
+      ;; forw*ard(char)
+      ;; forw*ard(((((((char))))
+      ;; forw*ard (char)
 
-            (not (is-whitespace (char-after))
-                 
-    ;; (cond
-    ;;  ((is-whitespace (char-after))
-    ;;   (while (is-whitespace (char-after))
-    ;;     (backward-char))
-    ;;   (while (and (not (is-conservative-boundary (char-after)))
-    ;;               (not (is-whitespace (char-before))))
-    ;;     (backward-char)))
+      ;; Starting Word With Boundary Character Case:
+      ;; other s*tuff  _testing
+      ;; other-s*tuff ___lolpol
 
-    ;;  ((is-conservative-boundary (char-after))
-    ;;   (backward-char)
-    ;;   (while (and (not (is-conservative-boundary (char-after)))
-    ;;               (not (is-whitespace (char-before))))
-    ;;     (backward-char)))
-
-    ;;  (t (while (and (not (is-conservative-boundary (char-after)))
-    ;;                 (not (is-whitespace (char-before))))
-    ;;       (backward-char))))))
-
+      ;; Other Cases
+      ;; thing*s()(((___ test-lol))))
+      ;; thing*s()(((  ___ test-lol))))
+      ;; text goes he*re (((((more text )))))continuing-(without-spaces
 
 (windmove-default-keybindings)
 
@@ -168,7 +214,6 @@ of just symbols also count as words). With argument ARG, do this that many times
 (global-set-key (kbd "C-<f7>") (lambda () (interactive) (toggle-line-numbers-type)))
 (global-set-key (kbd "M-n") 'display-line-numbers-mode)
 (global-set-key (kbd "C-x C-M-b") 'ibuffer)
-(global-set-key (kbd "C->") 'dot-mode-execute)
 
 ;; Text modifying and navigation keyboard shortcuts
 
@@ -179,9 +224,7 @@ of just symbols also count as words). With argument ARG, do this that many times
 (global-set-key (kbd "M-s M-r") 'narrow-to-region)
 (global-set-key (kbd "M-s M-e") 'widen)
 (global-set-key (kbd "M-f") 'forward-word-conservative)
-(global-set-key (kbd "M-b") 'backward-word-conservative)
 (global-set-key (kbd "M-F") 'forward-word)
-(global-set-key (kbd "M-B") 'backward-word)
 
 ;; Frame manipulation keyboard shortcuts
 
@@ -231,6 +274,30 @@ of just symbols also count as words). With argument ARG, do this that many times
 
 (font-lock-add-keywords 'csharp-mode
                         '(("init" . font-lock-keyword-face)))
+
+;; Add Ren'py-specific keywords to Python mode, but only when working with
+;; Ren'py files (i.e. have the ".rpy" extension).
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (when (and (stringp buffer-file-name)
+                       (string-match "\\.rpy\\'" buffer-file-name))
+              (font-lock-add-keywords 'python-mode
+                                      '(("default"    . font-lock-keyword-face)
+                                        ("define"     . font-lock-keyword-face)
+                                        ("hide"       . font-lock-keyword-face)
+                                        ("image"      . font-lock-keyword-face)
+                                        ("init"       . font-lock-keyword-face)
+                                        ("jump"       . font-lock-keyword-face)
+                                        ("label"      . font-lock-keyword-face)
+                                        ("play"       . font-lock-keyword-face)
+                                        ("properties" . font-lock-keyword-face)
+                                        ("scene"      . font-lock-keyword-face)
+                                        ("screen"     . font-lock-keyword-face)
+                                        ("show"       . font-lock-keyword-face)
+                                        ("style"      . font-lock-keyword-face)
+                                        ("text"       . font-lock-keyword-face)
+                                        ("use"        . font-lock-keyword-face))))))
 
 ;; It's really annoying to have Emacs GUI minimized with an accidental typo :(
 
@@ -329,87 +396,77 @@ of just symbols also count as words). With argument ARG, do this that many times
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#282b33" "#e1c1ee" "#5b94ab" "#cfcf9c" "#819cd6" "#a6c1e0" "#7289bc" "#c6c6c6"])
+ '(beacon-color "#d54e53")
  '(column-number-mode t)
  '(cursor-type 'box)
  '(custom-enabled-themes '(deeper-blue))
+ '(custom-safe-themes
+   '("49cd634a5d2e294c281348ce933d2f17c19531998a262cbdbe763ef2fb41846b" "90a6f96a4665a6a56e36dec873a15cbedf761c51ec08dd993d6604e32dd45940" "922f930fc5aeec220517dbf74af9cd2601d08f8250e4a15c385d509e22629cac" "7e377879cbd60c66b88e51fad480b3ab18d60847f31c435f15f5df18bdb18184" "7fd8b914e340283c189980cd1883dbdef67080ad1a3a9cc3df864ca53bdc89cf" "6128465c3d56c2630732d98a3d1c2438c76a2f296f3c795ebda534d62bb8a0e3" "47d5324dac28a85c1bb84b4c1dc3a8dc407cc7369db6e30d3244b16232b1eec4" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "7356632cebc6a11a87bc5fcffaa49bae528026a78637acd03cae57c091afd9b9" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "ff8be9ed2696bf7bc999423d909a603cb23a9525bb43135c0d256b0b9377c958" "8d3ef5ff6273f2a552152c7febc40eabca26bae05bd12bc85062e2dc224cde9a" "5f128efd37c6a87cd4ad8e8b7f2afaba425425524a68133ac0efd87291d05874" "e9d47d6d41e42a8313c81995a60b2af6588e9f01a1cf19ca42669a7ffd5c2fde" "3de5c795291a145452aeb961b1151e63ef1cb9565e3cdbd10521582b5fd02e9a" "3fe1ebb870cc8a28e69763dde7b08c0f6b7e71cc310ffc3394622e5df6e4f0da" "7de92d9e450585f9f435f2d9b265f34218cb235541c3d0d42c154bbbfe44d4dd" "00cec71d41047ebabeb310a325c365d5bc4b7fab0a681a2a108d32fb161b4006" "c2bce71b37ffd6e95fbd3b98d6eaadd113ec308f85149cfc8f50dee716764fed" "e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0" "aec7b55f2a13307a55517fdf08438863d694550565dee23181d2ebd973ebd6b8" "19b1140ebd62eb216a71b3e7784a260fb4dd893359a172e86558b3328f281400" default))
+ '(diary-entry-marker 'font-lock-variable-name-face)
  '(display-time-mode t)
+ '(emms-mode-line-icon-color "#1ba1a1")
+ '(exwm-floating-border-color "#413a3a")
+ '(fci-rule-color "#615959")
+ '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+ '(frame-background-mode 'dark)
+ '(highlight-tail-colors ((("#38372d") . 0) (("#343735") . 20)))
+ '(hl-sexp-background-color "#1c1f26")
+ '(ispell-dictionary nil)
+ '(jdee-db-active-breakpoint-face-colors (cons "#131313" "#f9cc6c"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#131313" "#adda78"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#131313" "#5b5353"))
  '(menu-bar-mode t)
-
+ '(objed-cursor-color "#fd6883")
  '(package-selected-packages
-   '(json-mode
-     inf-ruby
-     org-bullets
-     evil
-     tool-bar+
-     dot-mode
-     multiple-cursors
-     csharp-mode
-     julia-mode
-     doom-themes
-     wrap-region
-     vimrc-mode
-     transpose-frame
-     vscode-dark-plus-theme
-     vs-light-theme
-     vs-dark-theme
-     github-dark-vscode-theme
-     lua-mode
-     magit
-     yaml-mode
-     cmake-mode
-     dockerfile-mode
-     twilight-anti-bright-theme
-     badwolf-theme
-     clues-theme
-     soothe-theme
-     flatui-dark-theme
-     subatomic-theme
-     tangotango-theme
-     afternoon-theme
-     kaolin-themes
-     gruber-darker-theme
-     alect-themes
-     apropospriate-theme
-     ample-theme
-     cyberpunk-theme
-     moe-theme
-     material-theme
-     dracula-theme
-     gruvbox-theme
-     monokai-theme
-     spacemacs-theme
-     color-theme-modern
-     color-theme-sanityinc-tomorrow
-     color-theme-sanityinc-solarized
-     zenburn-theme
-     treemacs))
-
+   '(docker json-mode inf-ruby org-bullets evil tool-bar+ dot-mode multiple-cursors csharp-mode julia-mode doom-themes wrap-region vimrc-mode transpose-frame vscode-dark-plus-theme vs-light-theme vs-dark-theme github-dark-vscode-theme lua-mode magit yaml-mode cmake-mode dockerfile-mode twilight-anti-bright-theme badwolf-theme clues-theme soothe-theme flatui-dark-theme subatomic-theme tangotango-theme afternoon-theme kaolin-themes gruber-darker-theme alect-themes apropospriate-theme ample-theme cyberpunk-theme moe-theme material-theme dracula-theme gruvbox-theme monokai-theme spacemacs-theme color-theme-modern color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized zenburn-theme treemacs))
+ '(pdf-view-midnight-colors (cons "#fff1f3" "#2c2525"))
+ '(pos-tip-background-color "#DEDAD5")
+ '(pos-tip-foreground-color "#4b5254")
+ '(rustic-ansi-faces
+   ["#2c2525" "#fd6883" "#adda78" "#f9cc6c" "#85dacc" "#85dacc" "#85dacc" "#fff1f3"])
  '(scroll-bar-mode nil)
  '(size-indication-mode t)
  '(tool-bar-mode t)
- '(warning-suppress-types '((comp) (comp) (comp))))
+ '(vc-annotate-background "#2c2525")
+ '(vc-annotate-color-map
+   (list
+    (cons 20 "#adda78")
+    (cons 40 "#c6d574")
+    (cons 60 "#dfd070")
+    (cons 80 "#f9cc6c")
+    (cons 100 "#f7b76d")
+    (cons 120 "#f4a26e")
+    (cons 140 "#f38d70")
+    (cons 160 "#cea68e")
+    (cons 180 "#a9c0ad")
+    (cons 200 "#85dacc")
+    (cons 220 "#adb4b3")
+    (cons 240 "#d58e9b")
+    (cons 260 "#fd6883")
+    (cons 280 "#d46276")
+    (cons 300 "#ac5d6a")
+    (cons 320 "#83585f")
+    (cons 340 "#615959")
+    (cons 360 "#615959")))
+ '(vc-annotate-very-old-color nil)
+ '(warning-suppress-types '((comp) (comp) (comp)))
+ '(window-divider-mode nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-
- ;; Some themes make the Emacs terminal use very dim colors. So, here's my
- ;; universal color palette set.
-
- '(term-color-black   ((t (:foreground "#555753"))))
- '(term-color-red     ((t (:foreground "#EF2929"))))
- '(term-color-green   ((t (:foreground "#8AE234"))))
- '(term-color-yellow  ((t (:foreground "#FCE94F"))))
- '(term-color-blue    ((t (:foreground "#729FCF"))))
+ '(term-color-black ((t (:foreground "#555753"))))
+ '(term-color-blue ((t (:foreground "#729FCF"))))
+ '(term-color-cyan ((t (:foreground "#34E2E2"))))
+ '(term-color-green ((t (:foreground "#8AE234"))))
  '(term-color-magenta ((t (:foreground "#AD7FA8"))))
- '(term-color-cyan    ((t (:foreground "#34E2E2"))))
- '(term-color-white   ((t (:foreground "#EEEEEC"))))
-
- '(term-default-fg-color ((t (:inherit term-color-white))))
+ '(term-color-red ((t (:foreground "#EF2929"))))
+ '(term-color-white ((t (:foreground "#EEEEEC"))))
+ '(term-color-yellow ((t (:foreground "#FCE94F"))))
  '(term-default-bg-color ((t (:inherit term-color-black))))
-)
+ '(term-default-fg-color ((t (:inherit term-color-white)))))
 
 ;; Advanced functionality I need.
 
