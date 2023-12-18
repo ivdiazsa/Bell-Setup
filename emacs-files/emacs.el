@@ -186,12 +186,29 @@ of just symbols also count as words). With argument ARG, do this that many times
   (interactive "p")
   (if (< arg 0)
       (forward-word-conservative (* arg -1))
-    (dotimes (number arg))))
+    (dotimes (number arg)
+
+      (cond ((is-whitespace (char-before))
+             (backward-char)
+             (while (is-whitespace (char-after))
+               (backward-char)))
+
+            ((is-bracket-symbol (char-after))
+             (while (is-bracket-symbol (char-after))
+               (backward-char)))
+
+            ((is-conservative-boundary (char-before))
+             (while (and (is-conservative-boundary (char-before))
+                         (not (is-whitespace (char-before))))
+               (backward-char))))
+
+      (while (not (is-conservative-boundary (char-before)))
+        (backward-char)))))
 
       ;; Normal Case:
       ;; forw*ard-char
-      ;; forw*ard char
-      ;; forw*ard(char)
+      ;; forward char
+      ;; forward(char)
       ;; forw*ard(((((((char))))
       ;; forw*ard (char)
 
@@ -201,7 +218,7 @@ of just symbols also count as words). With argument ARG, do this that many times
 
       ;; Other Cases
       ;; thing*s()(((___ test-lol))))
-      ;; thing*s()(((  ___ test-lol))))
+      ;;;;; thing*s()(((  ___ test-lol))))
       ;; text goes he*re (((((more text )))))continuing-(without-spaces
 
 (windmove-default-keybindings)
@@ -225,6 +242,8 @@ of just symbols also count as words). With argument ARG, do this that many times
 (global-set-key (kbd "M-s M-e") 'widen)
 (global-set-key (kbd "M-f") 'forward-word-conservative)
 (global-set-key (kbd "M-F") 'forward-word)
+(global-set-key (kbd "M-b") 'backward-word-conservative)
+(global-set-key (kbd "M-B") 'backward-word)
 
 ;; Frame manipulation keyboard shortcuts
 
