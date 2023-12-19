@@ -184,42 +184,72 @@ of just symbols also count as words). With argument ARG, do this that many times
 means to stop at the previous boundary or word start character (i.e. 'words' made up
 of just symbols also count as words). With argument ARG, do this that many times."
   (interactive "p")
+
+  ;; A negative arg means we want to move forward, so we call the conservative
+  ;; forwards word friend function.
   (if (< arg 0)
       (forward-word-conservative (* arg -1))
     (dotimes (number arg)
 
-      (cond ((is-whitespace (char-before))
+      (cond (;; If we begin on a character whose previous neighbor is a whitespace
+             ;; one, then the first step is to get to the previous non-whitespace
+             ;; character. The next step is handled after this 'cond' statement.
+             (is-whitespace (char-before))
              (backward-char)
              (while (is-whitespace (char-after))
                (backward-char)))
 
+            ;; If we begin on a bracket symbol, then similarly to whitespaces, we
+            ;; need to find the previous non-bracket symbol character.
             ((is-bracket-symbol (char-after))
              (while (is-bracket-symbol (char-after))
                (backward-char)))
 
+            ;; If we begin on any boundary symbol other than brackets and whitespaces,
+            ;; then the first step is to find the previous character that is not
+            ;; a boundary character or whitespace. Whitespace is also considered as a
+            ;; stopping point because being next to a whitespace character means we're
+            ;; already at the beginning of the word, by definition.
             ((is-conservative-boundary (char-before))
              (while (and (is-conservative-boundary (char-before))
                          (not (is-whitespace (char-before))))
                (backward-char))))
 
+      ;; After all the potentially done work in the previous 'cond' statement, we
+      ;; are very most likely to be on a normal text character. In this case, then
+      ;; our goal is the first previous text character that follows a boundary one.
       (while (not (is-conservative-boundary (char-before)))
-        (backward-char)))))
+        (backward-char))
 
-      ;; Normal Case:
-      ;; forw*ard-char
-      ;; forward char
-      ;; forward(char)
-      ;; forw*ard(((((((char))))
-      ;; forw*ard (char)
+      ;; There is a specific case where after all the work done previously in this
+      ;; function, we will still end up on a non-whitespace boundary character.
+      ;; This specific case happens when the previous word is composed of only
+      ;; boundary characters. In such case, then our previous word's beginning is
+      ;; after the previous non-boundary character.
+      (when (is-conservative-boundary (char-after))
+        (while (and (is-conservative-boundary (char-before))
+                    (not (is-whitespace (char-before))))
+          (backward-char))
 
-      ;; Starting Word With Boundary Character Case:
-      ;; other s*tuff  _testing
-      ;; other-s*tuff ___lolpol
-
-      ;; Other Cases
-      ;; thing*s()(((___ test-lol))))
-      ;;;;; thing*s()(((  ___ test-lol))))
-      ;; text goes he*re (((((more text )))))continuing-(without-spaces
+        ;; This additional loop might look strange but it's needed for this specific
+        ;; case. Let's take the following example:
+        ;;
+        ;;   test-before(((( ___boundarycase))))
+        ;;
+        ;; If we do 'backward-word-conservative' without this additional loop,
+        ;; starting the cursor at the following position, with an asterisk (1):
+        ;;
+        ;;   1. test-before(((( *__boundarycase))))
+        ;;   2. test-before*((( ___boundarycase))))
+        ;;   3. test-*efore(((( ___boundarycase))))
+        ;;
+        ;; Then we end up at the first opening parenthesis character (2). This would
+        ;; be correct if there was whitespace before said parenthesis, but there is
+        ;; text in this case. So, the fully correct version should move the cursor
+        ;; to the beginning of that text (3).
+        (while (and (not (is-conservative-boundary (char-before)))
+                    (not (is-whitespace (char-before))))
+          (backward-char))))))
 
 (windmove-default-keybindings)
 
