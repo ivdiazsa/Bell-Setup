@@ -354,6 +354,12 @@ of just symbols also count as words). With argument ARG, do this that many times
   (global-unset-key (kbd "C-z"))
   (global-unset-key (kbd "C-x C-z")))
 
+;; I seldom use the screen scroll shortcuts, and they're constantly getting on
+;; my nerves due to accidental typos :(
+
+(global-unset-key (kbd "C-v"))
+(global-unset-key (kbd "M-v"))
+
 ;; Reuse Dired buffer also when moving back up to parent folder.
 
 (add-hook 'dired-mode-hook
