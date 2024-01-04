@@ -110,12 +110,18 @@
 ;;  Item Tags!
 ;; ************
 
-(setq org-tag-list
-      '(("Infrastructure" . nil)))
+(setq org-tag-alist
+      '(("Coreclr"        . nil)
+        ("Infrastructure" . nil)
+        ("Libraries"      . nil)
+        ("ReadyToRun"     . nil)))
 
 ;; **************
 ;;  Tags Colors!
 ;; **************
 
 (setq org-tag-faces
-      '(("Infrastructure" . (:foreground "#00AF99" :weight bold))))
+      '(("Coreclr"        . (:foreground "#BE2F42" :weight bold))
+        ("Infrastructure" . (:foreground "#00AF99" :weight bold))
+        ("Libraries"      . (:foreground "#197CB7" :weight bold))
+        ("ReadyToRun"     . (:foreground "#815881" :weight bold))))
