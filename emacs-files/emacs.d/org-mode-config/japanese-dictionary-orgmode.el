@@ -72,7 +72,7 @@ the dictionary."
         (definition (read-string "Enter the word's definition in English: ")))
 
     (record-word-to-dictionary hiragana-writing kanji-writing word-type definition)
-    (format "- %s%s (%s): %s\n"
+    (format "%s%s (%s): %s\n"
             kanji-writing
             word-type
             hiragana-writing
@@ -175,4 +175,11 @@ added to the lexicon."
                item (file+function japanese-lexicon-file get-word-found-place)
                #'get-new-word
                :empty-lines 1 :immediate-finish t :jump-to-captured t)
+             t)
+
+(add-to-list 'org-capture-templates
+             '("e" "New Japanese Sentence Example"
+               item (file+function japanese-lexicon-file get-word-found-place)
+               #'get-new-sentence
+               :empty-lines-after 1 :immediate-finish t :jump-to-captured t)
              t)
