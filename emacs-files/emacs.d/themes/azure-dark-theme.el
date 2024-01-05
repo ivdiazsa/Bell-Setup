@@ -199,10 +199,10 @@
      `(gnus-header-name                         ((,class (:foreground ,type))))
      `(gnus-header-subject                      ((,class (:foreground ,func :bold nil))))
 
-     ;; `(mu4e-view-url-number-face                ((,class (:foreground ,type))))
-     ;; `(mu4e-cited-1-face                        ((,class (:foreground ,line-number-fg))))
-     ;; `(mu4e-cited-7-face                        ((,class (:foreground ,hl-line-fg))))
-     ;; `(mu4e-header-marks-face                   ((,class (:foreground ,type))))
+     `(mu4e-view-url-number-face                ((,class (:foreground ,type))))
+     `(mu4e-cited-1-face                        ((,class (:foreground ,line-number-fg))))
+     `(mu4e-cited-7-face                        ((,class (:foreground ,hl-line-fg))))
+     `(mu4e-header-marks-face                   ((,class (:foreground ,type))))
 
      `(js2-private-function-call                ((,class (:foreground ,constant))))
      `(js2-jsdoc-html-tag-delimiter             ((,class (:foreground ,string))))
@@ -394,7 +394,7 @@
 
      `(diff-header                              ((t (:foreground ,header-line-fg :background nil))))
      `(diff-file-header                         ((t (:foreground ,highlight :background nil))))
-     `(diff-hunk-header                         ((t (:foreground ,doc :background header-line-bg))))
+     `(diff-hunk-header                         ((t (:foreground ,doc :background ,header-line-bg))))
      `(diff-added                               ((t (:foreground ,hl-line-fg :background ,ms-green-bg))))
      `(diff-removed                             ((t (:foreground ,hl-line-fg :background ,ms-red-bg))))
      `(diff-changed                             ((t (:foreground ,hl-line-fg :background ,ms-blue-bg))))
