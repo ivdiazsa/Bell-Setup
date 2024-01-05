@@ -16,42 +16,93 @@
 ;;  Work Item Information Functions!
 ;; **********************************
 
+;; ***************************
+;; get-work-item-tracking-info
+;; ***************************
+;; Work items are usually tracked in filed issues to the corresponding repository.
+;; Like in my case, most of my work is done in github.com/dotnet/runtime. This little
+;; function prompts for the necessary information to record the current work item's
+;; Github page, and link to it.
+
+(defun get-work-item-tracking-info ()
+  "Prompt for the github repository name and tracking issue number."
+  (setq tracking-info "")
+  (when (yes-or-no-p "Is there a tracking item in a Github repository? ")
+
+    (let* ((repo-name     (read-string "Enter the Github repository's suburl: "))
+           (issue-number  (read-string "Enter the tracking issue number: "))
+           (generated-url (format "[[https://github.com/%s/issues/%s]]"
+                                  repo-name
+                                  issue-number)))
+
+      (setq tracking-info (format "*- Repository: %s*\n*- Issue Number: %s*\n*- Link: %s*"
+                                  repo-name
+                                  issue-number
+                                  generated-url))))
+
+  (when (equal tracking-info "")
+    (setq tracking-info "No repository information was provided."))
+  (format "%s\n" tracking-info))
+
+
+;; ***********************
+;; get-work-item-checklist
+;; ***********************
+;; Most work items are usually subdivided by steps or tasks. This little function
+;; prompts for said tasks and subtasks, and records them in a checklist format under
+;; the current work item's section.
+
 (defun get-work-item-checklist ()
   "Prompt for the initial planned subtasks for the current work item."
   (setq checklist "")
-  (let ((continue (read-answer "Do you wish to add checklist items? "
-                               '(("yes" nil "add the list of tasks")
-                                 ("no"  nil "finish capturing this work item")))))
+  (when (yes-or-no-p "Do you wish to add checklist items? ")
+    (let ((more-tasks t))
 
-    (while (equal continue "yes")
-      (let* ((task-name (read-string "Enter the next task: "))
-             (has-subtasks (read-answer "Does this task have further subtasks? "
-                                        '(("yes" nil "add the list of subtasks")
-                                          ("no"  nil "continue adding tasks"))))
-             (task-item (format "\n- [ ] %s" task-name)))
+      (while more-tasks
+        (let* ((task-name (read-string "Enter the next task: "))
+               (has-subtasks (yes-or-no-p "Will this task be subdivided into subtasks? "))
+               (task-item (if has-subtasks
+                              (format "\n- [ ] %s [%%]\n" task-name)
+                            (format "\n- [ ] %s\n" task-name))))
 
-        (if (equal has-subtasks "yes")
-            (setq checklist (concat checklist (format "%s [%%]\n" task-item)))
-          (setq checklist (concat checklist (format "%s\n" task-item))))
+          (setq checklist (concat checklist task-item))
 
-        (while (equal has-subtasks "yes")
-          (let* ((subtask-name (read-string "Enter the subtask: "))
-                 (subtask-item (format "  - [ ] %s\n" subtask-name)))
+          (while has-subtasks
+            (let* ((subtask-name (read-string "Enter the subtask: "))
+                   (subtask-item (format "  - [ ] %s\n" subtask-name)))
 
-            (setq checklist (concat checklist subtask-item)))
+              (setq checklist (concat checklist subtask-item)))
+            (setq has-subtasks (yes-or-no-p "Do you wish to add another subtask? "))))
+        (setq more-tasks (yes-or-no-p "Do you wish to add another task? ")))))
 
-          (setq has-subtasks
-                (read-answer "Add another subtask? "
-                             '(("yes" nil "prompt for the next subtask")
-                               ("no"  nil "end and move to the next task"))))))
+  (when (equal checklist "")
+    (setq checklist "- [ ] Do work item"))
+  (format "%s\n" checklist))
 
-        (setq continue (read-answer "Add another task? "
-                                    '(("yes" nil "prompt for the next task")
-                                      ("no"  nil "finish capturing this work item"))))))
 
-  (if (string-equal checklist "")
-      (format "- [ ] Do work item\n")
-    (format "%s" checklist)))
+;; ******************************
+;; get-work-item-capture-template
+;; ******************************
+;; Main function that is in charge of getting all the capture information for the
+;; current work item, format it accordingly, and file it as an org capture template.
+
+(defun get-work-item-capture-template ()
+  "Function that entirely generates the org capture template for dotnet work items."
+  (let ((job-title       (read-string "Enter the job item title: "))
+        (job-description (read-string "Enter the job description: "))
+        (job-tags        (read-string "Enter tags for this job item (colon-separated): "))
+        (job-repo-info   (get-work-item-tracking-info))
+        (job-checklist   (get-work-item-checklist))
+        (job-filing-time (format-time-string "%Y/%m/%d %l:%M %P %Z")))
+
+    (format "** NEW ITEM [#2] %s [%%]\n\n:%s:\n:Created: <%s>\n\n%s\n\n%s%s"
+            job-title
+            job-tags
+            job-filing-time
+            job-description
+            job-repo-info
+            job-checklist)))
+
 
 ;; *********************
 ;;  New Item Templates!
@@ -65,14 +116,7 @@
 (add-to-list 'org-capture-templates
              '("i" "New Work Item"
                entry (file+headline dotnet-work-todos-file "Work Items")
-               "** NEW ITEM [#2] %^{Job Item Title} [%]\n\
-%^g\n\
-:Created: %<%Y/%m/%d %l:%M %P %Z>\n\n\
-%^{Job Item Description}\n\n\
-*- Repository: %^{Repository Name (what comes after github.com/)}*\n\
-*- Issue Number: %^{Issue Number}*\n\
-*- Link: [[https://github.com/%\\3/issues/%\\4]]*\n\
-%(get-work-item-checklist)\n"
+               #'get-work-item-capture-template
                :empty-lines 1 :immediate-finish t :jump-to-captured t)
              t)
 

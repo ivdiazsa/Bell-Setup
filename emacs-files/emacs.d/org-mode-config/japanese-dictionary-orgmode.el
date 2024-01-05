@@ -95,8 +95,9 @@ literally, there is another prompt afterwards to retrieve this case."
         (literal-translation (read-string
                               "Enter the literal translation if it differs: ")))
 
-    (unless (string-empty-p literal-translation)
-      (concat english-translation " (/Lit./ " literal-translation ")."))
+    (if (string-empty-p literal-translation)
+        (setq english-translation (concat english-translation "."))
+      (setq english-translation (concat english-translation ". (/Lit./ " literal-translation ").")))
     (format "*- %s -> %s*" japanese-sentence english-translation)))
 
 
@@ -174,7 +175,7 @@ added to the lexicon."
              '("w" "New Japanese Word"
                item (file+function japanese-lexicon-file get-word-found-place)
                #'get-new-word
-               :empty-lines 1 :immediate-finish t :jump-to-captured t)
+               :empty-lines 0 :immediate-finish t :jump-to-captured t)
              t)
 
 (add-to-list 'org-capture-templates
