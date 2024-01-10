@@ -314,10 +314,12 @@ of just symbols also count as words). With argument ARG, do this that many times
                           ("\\<define-key\\>"           . font-lock-keyword-face)
                           ("\\<eql\\>"                  . font-lock-keyword-face)
                           ("\\<equal\\>"                . font-lock-keyword-face)
+                          ("\\<format\\>"               . font-lock-keyword-face)
                           ("\\<global-set-key\\>"       . font-lock-keyword-face)
                           ("\\<global-unset-key\\>"     . font-lock-keyword-face)
                           ("\\<kbd\\>"                  . font-lock-keyword-face)
                           ("\\<load-file\\>"            . font-lock-keyword-face)
+                          ("\\<member\\>"               . font-lock-keyword-face)
                           ("\\<nil\\>"                  . font-lock-keyword-face)
                           ("\\<not\\>"                  . font-lock-keyword-face)))
 
