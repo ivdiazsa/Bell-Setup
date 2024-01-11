@@ -104,6 +104,20 @@
             job-checklist)))
 
 
+;; ****************
+;; PR Link Template
+;; ****************
+;; Small template implemented through Emacs' skeletons feature to help writing down
+;; the PR information of a work item. See it as a way to include an org template
+;; inside another org template, some time after the original one was recorded.
+
+(define-skeleton pr-template
+  "Prompt for a Github Pull Request information to add it to a work item."
+  ""
+  > "*- Pull Request Number: " (setq v1 (skeleton-read "PR Number: ")) "*" \n
+  > "*- Link: https://github.com/" (skeleton-read "Repo Suburl: ") "/pull/" v1 "*")
+
+
 ;; *********************
 ;;  New Item Templates!
 ;; *********************
@@ -132,6 +146,7 @@
                   "IN REVIEW(R!)"
                   "BLOCKED(b@/!)"
                   "WARNING(w@/!)"
+                  "APPROVED(a!)"
                   "COMPLETE(c!)"
                   "DISCARDED(d@/!)")))
 
@@ -147,6 +162,7 @@
         ("IN REVIEW"   . (:foreground "#F1C232" :weight bold))
         ("BLOCKED"     . (:foreground "#D13B55" :weight bold))
         ("WARNING"     . (:foreground "#FF1100" :weight bold))
+        ("APPROVED"    . (:foreground "#94F29D" :weight bold))
         ("COMPLETE"    . (:foreground "#19D22A" :weight bold))
         ("DISCARDED"   . (:foreground "#A7A7A7" :weight bold))))
 
@@ -158,7 +174,8 @@
       '(("Coreclr"        . nil)
         ("Infrastructure" . nil)
         ("Libraries"      . nil)
-        ("ReadyToRun"     . nil)))
+        ("ReadyToRun"     . nil)
+        ("Tests"          . nil)))
 
 ;; **************
 ;;  Tags Colors!
@@ -168,4 +185,5 @@
       '(("Coreclr"        . (:foreground "#BE2F42" :weight bold))
         ("Infrastructure" . (:foreground "#00AF99" :weight bold))
         ("Libraries"      . (:foreground "#197CB7" :weight bold))
-        ("ReadyToRun"     . (:foreground "#815881" :weight bold))))
+        ("ReadyToRun"     . (:foreground "#815881" :weight bold))
+        ("Tests"          . (:foreground "#D8AE2D" :weight bold))))
